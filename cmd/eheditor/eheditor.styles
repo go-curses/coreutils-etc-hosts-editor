@@ -1,0 +1,67 @@
+ctk-entry#comment {
+    dim: true;
+    bold: false;
+}
+ctk-entry#comment:selected,
+ctk-entry#comment:active {
+    dim: false;
+    bold: true;
+}
+ctk-entry#comment:prelight {
+    dim: false;
+    bold: false;
+}
+
+ctk-frame#comment ctk-entry#comment {
+    color: darkgray;
+    background-color: #771111;
+}
+ctk-frame#comment ctk-entry#comment:prelight {
+    color: silver;
+    background-color: #771111;
+}
+ctk-frame#comment ctk-entry#comment:selected,
+ctk-frame#comment ctk-entry#comment:active {
+    color: #ffffff;
+    background-color: #771111;
+}
+ctk-frame#comment ctk-entry#comment:insensitive {
+    color: #3e3e3e;
+    background-color: #770000;
+}
+
+ctk-frame#host-active ctk-entry#comment {
+    color: #3e3e3e;
+    background-color: #117711;
+}
+ctk-frame#host-active ctk-entry#comment:prelight {
+    color: silver;
+    background-color: #117711;
+}
+ctk-frame#host-active ctk-entry#comment:selected,
+ctk-frame#host-active ctk-entry#comment:active {
+    color: #ffffff;
+    background-color: #117711;
+}
+ctk-frame#host-active ctk-entry#comment:insensitive {
+    color: #3e3e3e;
+    background-color: #007700;
+}
+
+ctk-frame#host-inactive ctk-entry#comment {
+    color: darkgray;
+    background-color: #771111;
+}
+ctk-frame#host-inactive ctk-entry#comment:prelight {
+    color: silver;
+    background-color: #771111;
+}
+ctk-frame#host-inactive ctk-entry#comment:selected,
+ctk-frame#host-inactive ctk-entry#comment:active {
+    color: #ffffff;
+    background-color: #771111;
+}
+ctk-frame#host-inactive ctk-entry#comment:insensitive {
+    color: darkgray;
+    background-color: #770000;
+}
