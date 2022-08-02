@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-curses/cdk v0.5.12
-	github.com/go-curses/ctk v0.5.1
+	github.com/go-curses/ctk v0.5.3
 	github.com/urfave/cli/v2 v2.11.1
 )
 
