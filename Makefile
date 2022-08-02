@@ -4,6 +4,7 @@ SHELL := /bin/bash
 BUILD_CMD := eheditor
 CDK_PATH := ../../cdk
 CTK_PATH := ../../ctk
+CORELIBS_PATH := ../../corelibs
 ETC_HOSTS_PATH := ./example.etc-hosts
 LOG_LEVEL := debug
 
@@ -133,14 +134,21 @@ local: depends-on-cdk-path
 	@go mod edit -replace=github.com/go-curses/cdk=${CDK_PATH}
 	@for tgt in charset encoding env log memphis; do \
 		if [ -f ${CDK_PATH}/$$tgt/go.mod ]; then \
-			echo "#\t$$tgt"; \
+			echo -e "#\t$$tgt"; \
 			go mod edit -replace=github.com/go-curses/cdk/$$tgt=${CDK_PATH}/$$tgt ; \
 		fi; \
 	done
 	@for tgt in `ls ${CDK_PATH}/lib`; do \
 		if [ -f ${CDK_PATH}/lib/$$tgt/go.mod ]; then \
-			echo "#\tlib/$$tgt"; \
+			echo -e "#\tlib/$$tgt"; \
 			go mod edit -replace=github.com/go-curses/cdk/lib/$$tgt=${CDK_PATH}/lib/$$tgt ; \
+		fi; \
+	done
+	@echo "# adding go.mod local corelibs package replacements..."
+	@for tgt in `ls ${CORELIBS_PATH}/`; do \
+		if [ -f ${CORELIBS_PATH}/$$tgt/go.mod ]; then \
+			echo -e "#\tcorelibs/$$tgt"; \
+			go mod edit -replace=github.com/go-curses/corelibs/$$tgt=${CORELIBS_PATH}/$$tgt ; \
 		fi; \
 	done
 	@echo "# running go mod tidy"
@@ -153,14 +161,21 @@ unlocal: depends-on-cdk-path
 	@go mod edit -dropreplace=github.com/go-curses/cdk
 	@for tgt in charset encoding env log memphis; do \
 		if [ -f ${CDK_PATH}/$$tgt/go.mod ]; then \
-			echo "#\t$$tgt"; \
+			echo -e "#\t$$tgt"; \
 			go mod edit -dropreplace=github.com/go-curses/cdk/$$tgt ; \
 		fi; \
 	done
 	@for tgt in `ls ${CDK_PATH}/lib`; do \
 		if [ -f ${CDK_PATH}/lib/$$tgt/go.mod ]; then \
-			echo "#\tlib/$$tgt"; \
+			echo -e "#\tlib/$$tgt"; \
 			go mod edit -dropreplace=github.com/go-curses/cdk/lib/$$tgt ; \
+		fi; \
+	done
+	@echo "# removing go.mod local corelibs package replacements..."
+	@for tgt in `ls ${CORELIBS_PATH}/`; do \
+		if [ -f ${CORELIBS_PATH}/$$tgt/go.mod ]; then \
+			echo -e "#\tcorelibs/$$tgt"; \
+			go mod edit -dropreplace=github.com/go-curses/corelibs/$$tgt ; \
 		fi; \
 	done
 	@echo "# running go mod tidy"
