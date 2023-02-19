@@ -1,10 +1,10 @@
 module github.com/go-curses/coreutils/etc-hosts-editor
 
-go 1.17
+go 1.19
 
 require (
-	github.com/go-curses/cdk v0.5.12
-	github.com/go-curses/ctk v0.5.3
+	github.com/go-curses/cdk v0.5.13
+	github.com/go-curses/ctk v0.5.4
 	github.com/urfave/cli/v2 v2.11.1
 )
 
@@ -36,8 +36,8 @@ require (
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
-	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
-	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/term v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 )
