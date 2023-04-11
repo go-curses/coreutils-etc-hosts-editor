@@ -1,4 +1,4 @@
-module github.com/go-curses/coreutils/etc-hosts-editor
+module github.com/go-curses/coreutils-etc-hosts-editor
 
 go 1.19
 

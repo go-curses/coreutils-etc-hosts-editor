@@ -9,7 +9,7 @@ import (
 	cmath "github.com/go-curses/cdk/lib/math"
 	"github.com/go-curses/cdk/lib/ptypes"
 	cstrings "github.com/go-curses/cdk/lib/strings"
-	editor "github.com/go-curses/coreutils/etc-hosts-editor"
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 	"github.com/go-curses/ctk"
 )
 
