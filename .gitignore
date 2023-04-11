@@ -1,5 +1,6 @@
+/.idea
+/.env
 /eheditor
+/eheditor.*.*
 /eheditor_*
-/cmd/eheditor/eheditor
-/cmd/eheditor/eheditor_*
 *.log
