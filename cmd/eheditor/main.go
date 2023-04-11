@@ -28,6 +28,11 @@ var (
 	IncludeLogOutput          = "false"
 )
 
+var (
+	BuildVersion = "0.1.0"
+	BuildRelease = "trunk"
+)
+
 func init() {
 	cdk.Build.Profiling = cstrings.IsTrue(IncludeProfiling)
 	cdk.Build.LogFile = cstrings.IsTrue(IncludeLogFile)
@@ -51,7 +56,7 @@ func main() {
 		"eheditor",
 		"etc hosts editor",
 		"command line utility for managing the OS /etc/hosts file",
-		"0.0.1",
+		BuildVersion+" ("+BuildRelease+")",
 		"eheditor",
 		"/etc/hosts editor",
 		"/dev/tty",
