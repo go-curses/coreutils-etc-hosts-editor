@@ -14,17 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GOLANG_DEF_MK_VERSION := v0.1.0
+GOLANG_MAKEFILE_KEYS += DEF
+GOLANG_DEF_MK_VERSION := v0.1.1
 
 .PHONY: all help
 .PHONY: clean distclean realclean
-.PHONY: local unlocal tidy be-update
+.PHONY: local unlocal tidy be-update generate
 .PHONY: debug build build-all build-amd64 build-arm64
 .PHONY: release release-all release-amd64 release-arm64
 .PHONY: install install-autocomplete
 
 SRC_CMD_PATH ?= .
 SRC_AUTOCOMPLETE_FILE ?= ./bash_autocomplete
+CUSTOM_HELP_KEYS ?=
 
 all: help
 
@@ -68,6 +70,12 @@ ifdef help_custom_targets
 	$(call help_custom_targets)
 endif
 
+	@$(if ${CUSTOM_HELP_SECTIONS},$(foreach section,${CUSTOM_HELP_SECTIONS},\
+echo;\
+echo "$($(section)_NAME) targets:" \
+$(foreach key,$($(section)_KEYS),; echo "  $($(section)_$(key)_TARGET)	- $($(section)_$(key)_USAGE)")\
+))
+
 	@echo
 	@echo "go helpers:"
 	@echo "  local       - add go.mod local GOPKG_KEYS replacements"
@@ -81,9 +89,9 @@ endif
 	@echo "  are the included packages:" \
 		$(if ${GOPKG_KEYS},$(foreach key,${GOPKG_KEYS},; echo "    $(key): $($(key)_GO_PACKAGE) ($($(key)_LOCAL_PATH))"))
 
-	@echo
-	@echo "Golang.cmd.mk version: ${GOLANG_CMD_MK_VERSION}"
-	@echo "Golang.def.mk version: ${GOLANG_DEF_MK_VERSION}"
+	@echo $(foreach key,${GOLANG_MAKEFILE_KEYS},$(shell \
+	echo ";echo \"Golang.$(shell perl -e 'print lc("$(key)");').mk: $(GOLANG_$(key)_MK_VERSION)\"" \
+))
 
 clean:
 	@$(call __clean,${CLEAN_FILES})
@@ -182,3 +190,5 @@ unlocal: __unlocal
 vet: __vet
 
 test: __test
+
+generate: __generate

@@ -14,31 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-###############################################################################
-#:
-#: CHANGELOG
-#:
-#: v0.1.2 - go-curses/coreutils updates
-#:        * allow non-enjin things, set GO_ENJIN_PKG and BE_LOCAL_PATH to 'nil'
-#:        * updates to how be-update derives PKG_LIST
-#:        * provide BUILD_NAME based on BIN_NAME BUILD_OS and BUILD_ARCH
-#:        * git command handling cleanups
-#:        * added __vet, __test, __cover and __generate helper targets
-#: v0.1.1 - enjenv go binary updates
-#:        * abstract GO_BIN variable into a defined __go_bin make function
-#:        * __go_bin prefers enjenv's activate script over existing env PATH
-#:        * __go_bin falls back with that 'which enjenv' is found
-#:        * replace all traces of global GO_BIN with calling __go_bin
-#:        * update __golang target to use __go_bin
-#:        * __golang target echos the go version when present
-#:
-#: v0.1.0 - initial implementation
-#:
-###############################################################################
-
-GOLANG_CMD_MK_VERSION := v0.1.3
+GOLANG_MAKEFILE_KEYS += CMD
+GOLANG_CMD_MK_VERSION := v0.1.4
 
 .PHONY: __golang __tidy __local __unlocal __be_update
+.PHONY: __vet __test __cover __generate
 
 PWD := $(shell pwd)
 SHELL := /bin/bash
@@ -305,4 +285,3 @@ __cover: __golang
 __generate:
 	@echo "# generating go sources..."
 	@go generate -v ./...
-
