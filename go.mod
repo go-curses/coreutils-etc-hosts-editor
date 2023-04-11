@@ -1,11 +1,11 @@
 module github.com/go-curses/coreutils-etc-hosts-editor
 
-go 1.19
+go 1.20
 
 require (
 	github.com/go-curses/cdk v0.5.14
-	github.com/go-curses/ctk v0.5.5
-	github.com/urfave/cli/v2 v2.11.1
+	github.com/go-curses/ctk v0.5.6
+	github.com/urfave/cli/v2 v2.14.1
 )
 
 require (
@@ -30,7 +30,6 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
-	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/tdewolff/parse/v2 v2.6.1 // indirect
 	github.com/tg123/go-htpasswd v1.2.0 // indirect
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
