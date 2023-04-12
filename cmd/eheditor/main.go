@@ -63,10 +63,17 @@ func main() {
 	)
 	app.CLI().UsageText = "eheditor [options] [/etc/hosts]"
 	app.CLI().HideHelpCommand = true
+	app.CLI().EnableBashCompletion = true
+	app.CLI().UseShortOptionHandling = true
+	cli.VersionFlag = &cli.BoolFlag{
+		Name:    "version",
+		Usage:   "display the version",
+		Aliases: []string{"v"},
+	}
 	app.AddFlag(&cli.BoolFlag{
 		Name:    "read-only",
 		Usage:   "do not write any changes to the etc hosts file",
-		Aliases: []string{"ro"},
+		Aliases: []string{"r"},
 	})
 	app.Connect(cdk.SignalStartup, "eheditor-startup-handler", startup)
 	// app.Connect(cdk.SignalStartupComplete, "eheditor-startup-complete-handler", startupComplete)
