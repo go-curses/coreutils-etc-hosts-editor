@@ -15,7 +15,7 @@
 # limitations under the License.
 
 GOLANG_MAKEFILE_KEYS += DEF
-GOLANG_DEF_MK_VERSION := v0.1.1
+GOLANG_DEF_MK_VERSION := v0.1.2
 
 .PHONY: all help
 .PHONY: clean distclean realclean
@@ -33,10 +33,10 @@ all: help
 help:
 	@echo "usage: make [target]"
 	@echo
-	@echo "qa targets:"
-	@echo "  vet         - run go vet command"
-	@echo "  test        - perform all available tests"
-	@echo "  cover       - perform all available tests with coverage report"
+	@echo "golang qa targets:"
+	@echo "  go-vet         - run go vet command"
+	@echo "  go-test        - perform all available tests"
+	@echo "  go-cover       - perform all available tests with coverage report"
 
 	@echo
 	@echo "cleanup targets:"
@@ -187,8 +187,8 @@ local: __local
 
 unlocal: __unlocal
 
-vet: __vet
+go-vet: __vet
 
-test: __test
+go-test: __test
 
 generate: __generate
