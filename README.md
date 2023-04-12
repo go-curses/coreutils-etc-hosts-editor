@@ -19,7 +19,7 @@ USAGE:
    eheditor [options] [/etc/hosts]
 
 VERSION:
-   v0.1.0 (trunk)
+   v0.1.1 (trunk)
 
 DESCRIPTION:
    command line utility for managing the OS /etc/hosts file

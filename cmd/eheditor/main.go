@@ -29,7 +29,7 @@ var (
 )
 
 var (
-	BuildVersion = "0.1.0"
+	BuildVersion = "0.1.1"
 	BuildRelease = "trunk"
 )
 

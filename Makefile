@@ -21,7 +21,7 @@
 #export
 
 BIN_NAME := eheditor
-UNTAGGED_VERSION := v0.1.0
+UNTAGGED_VERSION := v0.1.1
 UNTAGGED_COMMIT := trunk
 
 SHELL := /bin/bash
