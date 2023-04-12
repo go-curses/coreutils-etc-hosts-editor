@@ -1,0 +1,16 @@
+Source: eheditor
+Section: go-curses
+Priority: optional
+Maintainer: The Go-Curses Team <go.enjin.org+curses@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.5.1
+Homepage: https://go-curses.org
+Vcs-Browser: https://github.com/go-curses/coreutils-etc-hosts-editor
+Vcs-Git: https://github.com/go-curses/coreutils-etc-hosts-editor.git
+Rules-Requires-Root: no
+
+Package: eheditor
+Architecture: any
+Description: Manage the OS /etc/hosts file
+ Simple command line utility to help with managing /etc/hosts entries
+ using reverse name lookups and a curses user interface.

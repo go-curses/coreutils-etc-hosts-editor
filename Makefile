@@ -22,7 +22,7 @@
 
 BIN_NAME := eheditor
 UNTAGGED_VERSION := v0.1.1
-UNTAGGED_COMMIT := trunk
+UNTAGGED_COMMIT := 8829e2533f
 
 SHELL := /bin/bash
 RUN_ARGS ?= ./example.etc-hosts
@@ -51,3 +51,8 @@ SRC_CMD_PATH := ./cmd/eheditor
 include Golang.cmd.mk
 include Golang.def.mk
 include Golang.cdk.mk
+
+#: begin debian packaging branch changes
+PACKAGING_NAME := eheditor
+include Debian.mk
+#: end debian packaging branch changes

@@ -1,0 +1,2 @@
+etc/bash_completion.d/eheditor /etc/bash_completion.d
+usr/bin/eheditor /usr/bin

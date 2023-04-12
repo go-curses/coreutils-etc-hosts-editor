@@ -1,0 +1,19 @@
+eheditor (0.1.1) unstable; urgency=medium
+
+  * tagged v0.1.1 release build - 8829e2533f11280372810659a7807921d2317fab
+  * upstream changes:
+   * 8829e25 Makefile, README.md, main.go: set version strings to v0.1.1
+   * 41eb0e8 go.mod: ufave/cli v2.25.1; tidy; added latest bash_autocomplete script
+   * c4d830e Makefile: UNTAGGED_COMMIT text is now trunk instead of 0000000000
+   * 4d9e43b Golang.def.mk: updated to v0.1.2
+   * 92f1a8f README.md: updated --help text
+   * 9e58deb main.go: enable bash completion; use short option handling; added -v alias to --version; renamed --read-only alias from --ro to -r
+   * db57586 Golang.cmd.mk: updated to v0.1.5
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Wed, 12 Apr 2023 12:53:49 -0400
+
+eheditor (0.1.0) unstable; urgency=medium
+
+  * initial v0.1.0 release
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Wed, 12 Apr 2023 11:52:52 -0400
