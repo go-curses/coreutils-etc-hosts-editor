@@ -15,7 +15,7 @@
 # limitations under the License.
 
 GOLANG_MAKEFILE_KEYS += CMD
-GOLANG_CMD_MK_VERSION := v0.1.4
+GOLANG_CMD_MK_VERSION := v0.1.5
 
 .PHONY: __golang __tidy __local __unlocal __be_update
 .PHONY: __vet __test __cover __generate
@@ -269,19 +269,19 @@ __be_update: __golang
 	@GOPROXY=direct $(call __go_bin) get ${_BUILD_TAGS} ${PKG_LIST}
 
 __vet: __golang
-	@echo -n "# vetting replace ..."
-	@go vet ./... && echo " done"
+	@echo -n "# go vet ./..."
+	@go vet ./... && echo " done" || echo " error"
 
 __test: vet
-	@echo "# testing replace ..."
+	@echo "# go test -v ./..."
 	@go test -v ./...
 
 __cover: __golang
-	@echo "# testing replace (with coverage.out) ..."
+	@echo "# go test -cover -coverprofile=coverage.out ./..."
 	@go test -cover -coverprofile=coverage.out ./...
-	@echo "# loading coverage.out ..."
+	@echo "# go tool cover -html=coverage.out"
 	@go tool cover -html=coverage.out
 
 __generate:
-	@echo "# generating go sources..."
+	@echo "# go generate -v ./..."
 	@go generate -v ./...
