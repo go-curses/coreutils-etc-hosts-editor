@@ -26,8 +26,8 @@ DESCRIPTION:
 
 GLOBAL OPTIONS:
    --help, -h, --usage  display command-line usage information (default: false)
-   --read-only, --ro    do not write any changes to the etc hosts file (default: false)
-   --version            display the version (default: false)
+   --read-only, -r      do not write any changes to the etc hosts file (default: false)
+   --version, -v        display the version (default: false)
 ```
 
 
