@@ -1,3 +1,12 @@
+eheditor (0.1.2) unstable; urgency=medium
+
+  * tagged v0.1.2 release build - acc6e1f84f263b47eedfbd9a0193b0af53b8455a
+  * upstream changes:
+   * acc6e1f Makefile: setting UNTAGGED_VERSION to v0.1.2
+   * 46c83a7 refactoring: migrated procedural cmd/eheditor user-interface code to new ui/eheditor module with a singluar *CEheditor structure, cmd/eheditor reduced to only what's needed to initialize and run the new eheditor ui; note: almost no visible changes, app runs the same as before
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Thu, 13 Apr 2023 15:47:37 -0400
+
 eheditor (0.1.1) unstable; urgency=medium
 
   * tagged v0.1.1 release build - 8829e2533f11280372810659a7807921d2317fab
