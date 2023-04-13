@@ -1,4 +1,18 @@
-package main
+// Copyright (c) 2023  The Go-Curses Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package eheditor
 
 import (
 	"fmt"
@@ -9,8 +23,9 @@ import (
 	cmath "github.com/go-curses/cdk/lib/math"
 	"github.com/go-curses/cdk/lib/ptypes"
 	cstrings "github.com/go-curses/cdk/lib/strings"
-	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 	"github.com/go-curses/ctk"
+
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
 /*
@@ -47,14 +62,18 @@ type ViewerRow struct {
 	Domains   ctk.Entry
 
 	Controls *ViewerRowControls
+
+	Eheditor *CEheditor
 }
 
-func NewViewerRow(host *editor.Host, viewerWidth int) (row *ViewerRow) {
+func NewViewerRow(eheditor *CEheditor, host *editor.Host, viewerWidth int) (row *ViewerRow) {
 	row = new(ViewerRow)
+	row.Eheditor = eheditor
+
 	row.Host = host
 	row.Active = host.Active()
 
-	row.Controls = newViewerRowControls(row)
+	row.Controls = newViewerRowControls(eheditor, row)
 	row.Frame = ctk.NewFrameWithWidget(row.Controls.HBox)
 	row.Frame.Show()
 	row.Frame.SetLabelAlign(0.5, 0.5)
@@ -147,7 +166,7 @@ func (row *ViewerRow) updateToComment(host *editor.Host, viewerWidth int) {
 	row.Comment.SetSizeRequest(size.W, size.H)
 	row.Comment.SetText(row.Host.Comment())
 
-	gWindow.ApplyStylesTo(row.Comment)
+	row.Eheditor.Window.ApplyStylesTo(row.Comment)
 	row.Comment.Invalidate()
 
 	row.FrameHBox.Hide()
@@ -199,7 +218,7 @@ func (row *ViewerRow) updateToHost(host *editor.Host, viewerWidth int) {
 		row.Frame.SetName("host-inactive")
 	}
 
-	gWindow.ApplyStylesTo(row.Comment)
+	row.Eheditor.Window.ApplyStylesTo(row.Comment)
 	row.Comment.Invalidate()
 
 	name := host.Name()
@@ -215,7 +234,7 @@ func (row *ViewerRow) updateToHost(host *editor.Host, viewerWidth int) {
 
 	_ = row.Actual.Disconnect(ctk.SignalActivate, "actual-activate-handler")
 	row.Actual.Connect(ctk.SignalActivate, "actual-activate-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
-		if err := newNsLookupDialog(row.Host); err != nil {
+		if err := row.Eheditor.newNsLookupDialog(row.Host); err != nil {
 			row.Actual.LogErr(err)
 		}
 		return cenums.EVENT_STOP

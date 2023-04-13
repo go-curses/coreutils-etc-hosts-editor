@@ -1,12 +1,27 @@
-package main
+// Copyright (c) 2023  The Go-Curses Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package eheditor
 
 import (
 	cenums "github.com/go-curses/cdk/lib/enums"
 	"github.com/go-curses/cdk/lib/paint"
 	"github.com/go-curses/cdk/log"
-	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 	"github.com/go-curses/ctk"
 	"github.com/go-curses/ctk/lib/enums"
+
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
 type ViewerRowControls struct {
@@ -17,10 +32,14 @@ type ViewerRowControls struct {
 	MoveDn   ctk.Button
 	AddEntry ctk.Button
 	DelEntry ctk.Button
+
+	Eheditor *CEheditor
 }
 
-func newViewerRowControls(row *ViewerRow) (ctrls *ViewerRowControls) {
+func newViewerRowControls(eheditor *CEheditor, row *ViewerRow) (ctrls *ViewerRowControls) {
 	ctrls = new(ViewerRowControls)
+	ctrls.Eheditor = eheditor
+
 	ctrls.Row = row
 
 	ctrls.HBox = ctk.NewHBox(false, 1)
@@ -103,8 +122,8 @@ func (ctrls *ViewerRowControls) UpdateToggle() {
 func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 	ctrls.Row = row
 
-	idx := gEH.IndexOf(row.Host)
-	last := gEH.Len() - 1
+	idx := ctrls.Eheditor.HostFile.IndexOf(row.Host)
+	last := ctrls.Eheditor.HostFile.Len() - 1
 
 	ctrls.UpdateToggle()
 
@@ -117,7 +136,7 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 		ctrls.Toggle.Connect(ctk.SignalActivate, "toggle-row-state-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
 			row.Host.SetActive(!row.Host.Active())
 			ctrls.UpdateToggle()
-			updateViewer()
+			ctrls.Eheditor.updateViewer()
 			return cenums.EVENT_STOP
 		})
 	}
@@ -132,8 +151,8 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 
 	_ = ctrls.MoveUp.Disconnect(ctk.SignalActivate, "move-row-up-handler")
 	ctrls.MoveUp.Connect(ctk.SignalActivate, "move-row-up-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
-		gEH.MoveHost(idx, idx-1)
-		updateViewer()
+		ctrls.Eheditor.HostFile.MoveHost(idx, idx-1)
+		ctrls.Eheditor.updateViewer()
 		return cenums.EVENT_STOP
 	})
 
@@ -147,14 +166,14 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 
 	_ = ctrls.MoveDn.Disconnect(ctk.SignalActivate, "move-row-down-handler")
 	ctrls.MoveDn.Connect(ctk.SignalActivate, "move-row-down-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
-		gEH.MoveHost(idx, idx+1)
-		updateViewer()
+		ctrls.Eheditor.HostFile.MoveHost(idx, idx+1)
+		ctrls.Eheditor.updateViewer()
 		return cenums.EVENT_STOP
 	})
 
 	_ = ctrls.AddEntry.Disconnect(ctk.SignalActivate, "add-row-handler")
 	ctrls.AddEntry.Connect(ctk.SignalActivate, "add-row-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
-		// gEH.InsertHost(editor.NewHostFromInfo(editor.HostInfo{}), idx-1)
+		// ctrls.Eheditor.HostFile.InsertHost(editor.NewHostFromInfo(editor.HostInfo{}), idx-1)
 
 		var entries []interface{}
 		entries = append(entries, "Comment Entry", 1)
@@ -170,12 +189,12 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 			switch response {
 			case 1: // add comment
 				ctrls.AddEntry.LogDebug("add comment at index: %v", idx)
-				gEH.InsertHost(editor.NewComment(""), idx)
-				reloadViewer()
+				ctrls.Eheditor.HostFile.InsertHost(editor.NewComment(""), idx)
+				ctrls.Eheditor.reloadViewer()
 			case 2: // add host
 				ctrls.AddEntry.LogDebug("add host at index: %v", idx)
-				gEH.InsertHost(editor.NewHostFromInfo(editor.HostInfo{}), idx)
-				reloadViewer()
+				ctrls.Eheditor.HostFile.InsertHost(editor.NewHostFromInfo(editor.HostInfo{}), idx)
+				ctrls.Eheditor.reloadViewer()
 			default:
 				if idx := int(response); idx < 0 {
 					ctrls.AddEntry.LogDebug("new entry action cancelled")
@@ -205,8 +224,8 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 				switch response {
 				case enums.ResponseYes:
 					log.DebugF("removing entry at index: %v", idx)
-					gEH.RemoveHost(idx)
-					reloadViewer()
+					ctrls.Eheditor.HostFile.RemoveHost(idx)
+					ctrls.Eheditor.reloadViewer()
 				case enums.ResponseCancel, enums.ResponseClose, enums.ResponseNo:
 					log.DebugF("user cancelled removal operation")
 				}

@@ -1,16 +1,29 @@
+// Copyright (c) 2023  The Go-Curses Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
-	_ "embed"
 	"os"
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/go-curses/ctk"
-
 	"github.com/go-curses/cdk"
 	cstrings "github.com/go-curses/cdk/lib/strings"
 	"github.com/go-curses/cdk/log"
+
+	"github.com/go-curses/coreutils-etc-hosts-editor/ui/eheditor"
 )
 
 // Build Configuration Flags
@@ -45,14 +58,8 @@ func init() {
 	cdk.Build.LogOutput = cstrings.IsTrue(IncludeLogOutput)
 }
 
-//go:embed eheditor.accelmap
-var eheditorAccelMap string
-
-//go:embed eheditor.styles
-var eheditorStyles string
-
 func main() {
-	app := ctk.NewApplication(
+	ehe := eheditor.NewEheditor(
 		"eheditor",
 		"etc hosts editor",
 		"command line utility for managing the OS /etc/hosts file",
@@ -61,24 +68,22 @@ func main() {
 		"/etc/hosts editor",
 		"/dev/tty",
 	)
-	app.CLI().UsageText = "eheditor [options] [/etc/hosts]"
-	app.CLI().HideHelpCommand = true
-	app.CLI().EnableBashCompletion = true
-	app.CLI().UseShortOptionHandling = true
+	appCLI := ehe.App.CLI()
+	appCLI.UsageText = "eheditor [options] [/etc/hosts]"
+	appCLI.HideHelpCommand = true
+	appCLI.EnableBashCompletion = true
+	appCLI.UseShortOptionHandling = true
+	ehe.App.AddFlag(&cli.BoolFlag{
+		Name:    "read-only",
+		Usage:   "do not write any changes to the etc hosts file",
+		Aliases: []string{"r"},
+	})
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Usage:   "display the version",
 		Aliases: []string{"v"},
 	}
-	app.AddFlag(&cli.BoolFlag{
-		Name:    "read-only",
-		Usage:   "do not write any changes to the etc hosts file",
-		Aliases: []string{"r"},
-	})
-	app.Connect(cdk.SignalStartup, "eheditor-startup-handler", startup)
-	// app.Connect(cdk.SignalStartupComplete, "eheditor-startup-complete-handler", startupComplete)
-	app.Connect(cdk.SignalShutdown, "eheditor-quit-handler", shutdown)
-	if err := app.Run(os.Args); err != nil {
+	if err := ehe.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
 }
