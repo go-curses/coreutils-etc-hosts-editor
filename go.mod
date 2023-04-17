@@ -3,8 +3,9 @@ module github.com/go-curses/coreutils-etc-hosts-editor
 go 1.20
 
 require (
-	github.com/go-curses/cdk v0.5.14
-	github.com/go-curses/ctk v0.5.6
+	github.com/go-curses/cdk v0.5.15
+	github.com/go-curses/ctk v0.5.7
+	github.com/maruel/natural v1.1.0
 	github.com/urfave/cli/v2 v2.25.1
 )
 
