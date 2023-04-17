@@ -13,9 +13,9 @@ import (
 type HostImportance string
 
 const (
-	HostNotImportant   HostImportance = "none"
-	HostImportanceIPv4 HostImportance = "ipv4"
-	HostImportanceIPv6 HostImportance = "ipv6"
+	HostNotImportant    HostImportance = "none"
+	HostIsLocalhostIPv4 HostImportance = "ipv4"
+	HostIsLocalhostIPv6 HostImportance = "ipv6"
 )
 
 type HostInfo struct {
@@ -325,9 +325,9 @@ func (h *Host) Importance() HostImportance {
 	for _, domain := range h.domains {
 		switch domain {
 		case "localhost":
-			return HostImportanceIPv4
+			return HostIsLocalhostIPv4
 		case "ip6-allrouters", "ip6-allnodes", "ip6-loopback", "ip6-localhost":
-			return HostImportanceIPv6
+			return HostIsLocalhostIPv6
 		}
 	}
 	return HostNotImportant
