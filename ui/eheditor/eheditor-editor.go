@@ -32,8 +32,8 @@ import (
 )
 
 const (
-	gSidebarOuterWidth = 21
-	gSidebarInnerWidth = 16
+	gSidebarOuterWidth = 25
+	gSidebarInnerWidth = 20
 )
 
 func (e *CEheditor) switchToEditor() {
@@ -76,7 +76,7 @@ func (e *CEheditor) makeEditor() ctk.Widget {
 
 		switch mode {
 		case ListByEntry:
-			eWidth = 11
+			eWidth = gSidebarInnerWidth - 5
 			eLabel = "_Entry"
 			eTheme = ActiveButtonTheme
 			e.SidebarMode = ListByEntry
@@ -85,7 +85,7 @@ func (e *CEheditor) makeEditor() ctk.Widget {
 			sidebarCustomFrame.Hide()
 			sidebarEntryFrame.Show()
 		case ListByAddress:
-			aWidth = 11
+			aWidth = gSidebarInnerWidth - 5
 			aLabel = "_Address"
 			aTheme = ActiveButtonTheme
 			e.SidebarMode = ListByAddress
@@ -94,7 +94,7 @@ func (e *CEheditor) makeEditor() ctk.Widget {
 			sidebarCustomFrame.Show()
 			sidebarEntryFrame.Hide()
 		case ListByDomain:
-			dWidth = 11
+			dWidth = gSidebarInnerWidth - 5
 			dLabel = "_Domain"
 			dTheme = ActiveButtonTheme
 			e.SidebarMode = ListByDomain
@@ -544,11 +544,7 @@ func (e *CEheditor) updateEditorByAddressOrDomain() {
 		host := choices[key]
 		b := e.makeSidebarButton(key, host)
 		switch host.Importance() {
-		case editor.HostIsLocalhostIPv4:
-			localsCount += 1
-			e.SidebarLocalsList.PackStart(b, false, false, 0)
-			e.SidebarLocalsList.SetSizeRequest(gSidebarInnerWidth, localsCount)
-		case editor.HostIsLocalhostIPv6:
+		case editor.HostIsLocalhostIPv4, editor.HostIsLocalhostIPv6:
 			localsCount += 1
 			e.SidebarLocalsList.PackStart(b, false, false, 0)
 			e.SidebarLocalsList.SetSizeRequest(gSidebarInnerWidth, localsCount)
@@ -587,7 +583,7 @@ func (e *CEheditor) makeSidebarButton(key string, host *editor.Host) (b ctk.Butt
 	b = ctk.NewButtonWithWidget(label)
 	_ = b.InstallProperty(cdk.Property("host"), cdk.StructProperty, true, host)
 	b.Show()
-	b.SetSizeRequest(-1, 1)
+	b.SetSizeRequest(gSidebarInnerWidth, 1)
 	b.Connect(ctk.SignalActivate, key+"-handler", func(data []interface{}, argv ...interface{}) cenums.EventFlag {
 		if h, ok := data[0].(*editor.Host); ok {
 			e.focusEditor(h)

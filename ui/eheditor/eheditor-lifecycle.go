@@ -88,7 +88,7 @@ func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.Event
 		e.Window.AddAccelGroup(e.makeAccelmap())
 
 		vbox := e.Window.GetVBox()
-		vbox.SetSpacing(1)
+		vbox.SetSpacing(0)
 
 		e.ContentsHBox = ctk.NewHBox(false, 0)
 		e.ContentsHBox.Show()
