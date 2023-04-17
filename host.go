@@ -96,7 +96,18 @@ func (h *Host) Equals(host *Host) bool {
 	host.RLock()
 	defer h.RUnlock()
 	defer host.RUnlock()
-	return h.address == host.address &&
+	hIsOnlyComment := h.IsOnlyComment()
+	hostIsOnlyComment := host.IsOnlyComment()
+	if hIsOnlyComment {
+		if hostIsOnlyComment {
+			return h.comment == host.comment
+		}
+		return false
+	} else if hostIsOnlyComment {
+		return false
+	}
+	return hIsOnlyComment == hostIsOnlyComment &&
+		h.address == host.address &&
 		h.comment == host.comment &&
 		h.active == host.active &&
 		cstrings.EqualStringSlices(h.domains, host.domains)
@@ -138,10 +149,12 @@ func (h *Host) Block() string {
 	if h.Empty() {
 		return ""
 	}
-	isComment := h.IsComment()
+	var out string
+
+	isComment := h.IsOnlyComment()
 	h.RLock()
 	defer h.RUnlock()
-	out := ""
+
 	if isComment {
 		out += "###\n"
 		for _, line := range rxNewlines.Split(h.comment, -1) {
@@ -150,7 +163,8 @@ func (h *Host) Block() string {
 		out += "###\n"
 		return out
 	}
-	if len(h.comment) > 0 {
+
+	if h.comment != "" {
 		for _, line := range rxNewlines.Split(h.comment, -1) {
 			out += "# " + line + "\n"
 		}
