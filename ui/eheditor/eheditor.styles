@@ -12,6 +12,16 @@ ctk-entry#comment:prelight {
     bold: false;
 }
 
+ctk-button#editing-list-selected {
+    dim: false;
+    bold: true;
+}
+
+ctk-button#editing-list-unselected {
+    dim: true;
+    bold: false;
+}
+
 ctk-frame#comment ctk-entry#comment {
     color: darkgray;
     background-color: #771111;

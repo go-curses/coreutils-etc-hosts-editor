@@ -23,7 +23,6 @@ import (
 	"github.com/go-curses/cdk/lib/ptypes"
 	"github.com/go-curses/cdk/log"
 	"github.com/go-curses/ctk"
-	enums2 "github.com/go-curses/ctk/lib/enums"
 
 	"github.com/go-curses/coreutils-etc-hosts-editor"
 )
@@ -86,105 +85,24 @@ func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.Event
 			e.Window.LogErr(err)
 		}
 
-		ag := ctk.NewAccelGroup()
-		ag.ConnectByPath(
-			"<eheditor-window>/File/Quit",
-			"quit-accel",
-			func(argv ...interface{}) (handled bool) {
-				ag.LogDebug("quit-accel called")
-				e.requestQuit()
-				return
-			},
-		)
-		ag.ConnectByPath(
-			"<eheditor-window>/File/Reload",
-			"reload-accel",
-			func(argv ...interface{}) (handled bool) {
-				ag.LogDebug("reload-accel called")
-				e.requestReload()
-				return
-			},
-		)
-		ag.ConnectByPath(
-			"<eheditor-window>/File/Save",
-			"save-accel",
-			func(argv ...interface{}) (handled bool) {
-				ag.LogDebug("save-accel called")
-				e.requestSave()
-				return
-			},
-		)
-		e.Window.AddAccelGroup(ag)
+		e.Window.AddAccelGroup(e.makeAccelmap())
 
 		vbox := e.Window.GetVBox()
 		vbox.SetSpacing(1)
 
-		e.HostsHBox = ctk.NewHBox(false, 0)
-		e.HostsHBox.Show()
-		// _ = e.HostsHBox.SetBoolProperty(cdk.PropertyDebug, true)
-		// _ = e.HostsHBox.SetBoolProperty(ctk.PropertyDebugChildren, true)
-		vbox.PackStart(e.HostsHBox, true, true, 0)
+		e.ContentsHBox = ctk.NewHBox(false, 0)
+		e.ContentsHBox.Show()
+		vbox.PackStart(e.ContentsHBox, true, true, 0)
 
-		e.LeftSep = ctk.NewSeparator()
-		e.LeftSep.Show()
-		e.HostsHBox.PackStart(e.LeftSep, false, true, 0)
+		e.ContentsHBox.PackStart(e.makeEditor(), true, true, 0)
+		e.ContentsHBox.PackStart(e.makeViewer(), true, true, 0)
 
-		e.HostsViewport = ctk.NewScrolledViewport()
-		e.HostsViewport.SetTheme(ViewerTheme)
-		e.HostsViewport.Show()
-		e.HostsViewport.SetPolicy(enums2.PolicyAutomatic, enums2.PolicyAutomatic)
-		e.HostsVBox = ctk.NewVBox(false, 1)
-		e.HostsVBox.Show()
-		// _ = e.HostsVBox.SetBoolProperty(ctk.PropertyDebug, true)
-		e.HostsViewport.Add(e.HostsVBox)
-		// e.HostsVBox.SetBoolProperty(cdk.PropertyDebug, true)
-		// e.HostsViewport.SetBoolProperty(cdk.PropertyDebug, true)
-		e.HostsHBox.PackStart(e.HostsViewport, true, true, 0)
+		vbox.PackEnd(e.makeActionButtonBox(), false, true, 0)
 
-		e.RightSep = ctk.NewSeparator()
-		e.RightSep.Show()
-		e.HostsHBox.PackStart(e.RightSep, false, false, 0)
-
-		e.ActionHBox = ctk.NewHBox(false, 1)
-		e.ActionHBox.Show()
-		vbox.PackEnd(e.ActionHBox, false, true, 0)
-
-		actionSep := ctk.NewSeparator()
-		actionSep.Show()
-		e.ActionHBox.PackStart(actionSep, true, true, 0)
-
-		e.SaveButton = ctk.NewButtonWithMnemonic("_Save <F3>")
-		e.SaveButton.Show()
-		if e.ReadOnlyMode {
-			e.SaveButton.SetSensitive(false)
-		} else {
-			e.SaveButton.Connect(ctk.SignalActivate, "save-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-				e.requestSave()
-				return enums.EVENT_STOP
-			})
-		}
-		e.ActionHBox.PackEnd(e.SaveButton, false, false, 0)
-
-		e.ReloadButton = ctk.NewButtonWithMnemonic("_Reload <F5>")
-		e.ReloadButton.Show()
-		e.ReloadButton.Connect(ctk.SignalActivate, "reload-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-			e.requestReload()
-			return enums.EVENT_STOP
-		})
-		e.ActionHBox.PackEnd(e.ReloadButton, false, false, 0)
-
-		e.QuitButton = ctk.NewButtonWithMnemonic("_Quit <F10>")
-		e.QuitButton.Show()
-		e.QuitButton.Connect(ctk.SignalActivate, "quit-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-			e.requestQuit()
-			return enums.EVENT_STOP
-		})
-		e.ActionHBox.PackEnd(e.QuitButton, false, false, 0)
-
+		e.switchToEditor()
 		e.App.NotifyStartupComplete()
 		e.Window.Show()
 		e.HostsViewport.GrabFocus()
-		e.reloadViewer()
 		e.Display.Connect(cdk.SignalEventResize, "display-resize-handler", func(data []interface{}, argv ...interface{}) enums.EventFlag {
 			if e.App.StartupCompleted() {
 				e.updateViewer()

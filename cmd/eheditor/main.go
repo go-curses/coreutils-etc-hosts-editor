@@ -74,6 +74,11 @@ func main() {
 	appCLI.EnableBashCompletion = true
 	appCLI.UseShortOptionHandling = true
 	ehe.App.AddFlag(&cli.BoolFlag{
+		Name:   "with-old-version",
+		Usage:  "include the original version user-interface",
+		Hidden: true,
+	})
+	ehe.App.AddFlag(&cli.BoolFlag{
 		Name:    "read-only",
 		Usage:   "do not write any changes to the etc hosts file",
 		Aliases: []string{"r"},

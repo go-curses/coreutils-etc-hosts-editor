@@ -18,6 +18,7 @@ import (
 	_ "embed"
 
 	"github.com/go-curses/cdk"
+	"github.com/go-curses/cdk/lib/sync"
 	"github.com/go-curses/ctk"
 
 	editor "github.com/go-curses/coreutils-etc-hosts-editor"
@@ -26,8 +27,19 @@ import (
 //go:embed eheditor.accelmap
 var eheditorAccelMap string
 
+//go:embed eheditor.accelmap.orig
+var eheditorAccelMapOriginal string
+
 //go:embed eheditor.styles
 var eheditorStyles string
+
+type SidebarListMode uint8
+
+const (
+	ListByDomain SidebarListMode = iota
+	ListByAddress
+	ListByEntry
+)
 
 type CEheditor struct {
 	App ctk.Application
@@ -37,19 +49,57 @@ type CEheditor struct {
 	LastError    error
 	ReadOnlyMode bool
 
-	LeftSep       ctk.Separator
-	RightSep      ctk.Separator
+	ContentsHBox ctk.HBox
+	ActionHBox   ctk.HButtonBox
+	Display      cdk.Display
+	Window       ctk.Window
+	EditorButton ctk.Button
+	ViewerButton ctk.Button
+	SaveButton   ctk.Button
+	ReloadButton ctk.Button
+	QuitButton   ctk.Button
+
 	HostsViewport ctk.ScrolledViewport
 	HostsVBox     ctk.VBox
-	HostsHBox     ctk.HBox
-	ActionHBox    ctk.HBox
-	Display       cdk.Display
-	Window        ctk.Window
-	SaveButton    ctk.Button
-	ReloadButton  ctk.Button
-	QuitButton    ctk.Button
+
+	EditingHBox ctk.HBox
+
+	ByDomainsButton ctk.Button
+	ByAddressButton ctk.Button
+	ByEntryButton   ctk.Button
+
+	SidebarFrame        ctk.Frame
+	SidebarEntryList    ctk.VBox
+	SidebarLocalsList   ctk.VBox
+	SidebarCustomList   ctk.VBox
+	SidebarCommentsList ctk.VBox
+
+	SidebarAddEntryButton      ctk.Button
+	SidebarMoveEntryUpButton   ctk.Button
+	SidebarMoveEntryDownButton ctk.Button
+
+	CommentsEntry  ctk.Entry
+	HostEditVBox   ctk.VBox
+	AddressEntry   ctk.Entry
+	AddressButton  ctk.Button
+	DomainsEntry   ctk.Entry
+	ActivateButton ctk.Button
+	DeleteButton   ctk.Button
+
+	HostSelectedFrame    ctk.Frame
+	NothingSelectedFrame ctk.Frame
+	CommentSelectedFrame ctk.Frame
+
+	SidebarMode  SidebarListMode
+	SelectedHost *editor.Host
+
+	EditorCommentList   []*editor.Host
+	EditorAddressLookup map[string]*editor.Host
+	EditorDomainsLookup map[string]*editor.Host
 
 	ViewerDomainLookup map[string]*editor.Host
+
+	sync.RWMutex
 }
 
 func NewEheditor(name string, usage string, description string, version string, tag string, title string, ttyPath string) (e *CEheditor) {
@@ -65,4 +115,10 @@ func NewEheditor(name string, usage string, description string, version string, 
 func (e *CEheditor) Run(argv []string) (err error) {
 	err = e.App.Run(argv)
 	return
+}
+
+func (e *CEheditor) reloadContents() {
+	e.reloadViewer()
+	e.reloadEditor()
+	e.focusEditor(nil)
 }
