@@ -27,9 +27,6 @@ import (
 //go:embed eheditor.accelmap
 var eheditorAccelMap string
 
-//go:embed eheditor.accelmap.orig
-var eheditorAccelMapOriginal string
-
 //go:embed eheditor.styles
 var eheditorStyles string
 
