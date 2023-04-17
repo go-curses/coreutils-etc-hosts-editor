@@ -128,11 +128,17 @@ func (h *Host) Changed() bool {
 func (h *Host) Line() string {
 	h.RLock()
 	defer h.RUnlock()
-	active := ""
+	var active string
 	if !h.active {
 		active = "#"
 	}
-	return fmt.Sprintf("%v%v\t%v\n", active, h.address, strings.Join(h.domains, " "))
+	var address string
+	if h.address == "" || !cstrings.StringIsIP(h.address) {
+		address = "0.0.0.0"
+	} else {
+		address = h.address
+	}
+	return fmt.Sprintf("%v%v\t%v\n", active, address, strings.Join(h.domains, " "))
 }
 
 func (h *Host) Empty() bool {
@@ -169,9 +175,17 @@ func (h *Host) Block() string {
 			out += "# " + line + "\n"
 		}
 	}
-	if len(h.lookup) > 0 {
+
+	var lookup string
+	if h.address != "" && !cstrings.StringIsIP(h.address) && h.lookup == "" {
+		lookup = h.address
+	} else {
+		lookup = h.lookup
+	}
+	if lookup != "" {
 		out += fmt.Sprintf("#nslookup %v\n", h.lookup)
 	}
+
 	out += h.Line()
 	return out
 }
