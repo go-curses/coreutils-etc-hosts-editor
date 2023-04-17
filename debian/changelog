@@ -1,3 +1,20 @@
+eheditor (0.5.0) unstable; urgency=medium
+
+  * tagged v0.5.0 release build - 2734d03ce3768990079ac9642d9cb217fb4e3122
+  * upstream changes:
+   * 2734d03 Makefile: setting UNTAGGED_VERSION to v0.5.0
+   * e6c5a03 ui/eheditor: remove cruft
+   * a995ff7 ui/eheditor: remove gap between save/reload/quit and editor area; make sidebar 25 characters wide; code cosmetic changes
+   * 76c2336 go.mod: cdk v0.5.15; ctk v0.5.7; tidy
+   * 2567482 ui/eheditor: implemented entirely new user interface to be actually user friendly (use the hidden --with-old-version to enable viewer toggle buttons and accelerators, may purge the old ui in a future release)
+   * bfeaa1b host,hostfile,parse.go: added copyright headers
+   * 595cdcc host.go: Line() and Block() output handles no-address-set error cases, uses 0.0.0.0 so as to prevent cases of leaving the hosts file in a broken state
+   * 0eb1039 host.go: refactor handling of is-only-comment cases
+   * 937209d host.go: renamed host importance variable names
+   * a575b6e parse.go: host is onlyComment when host.lookup is also empty
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Mon, 17 Apr 2023 18:22:30 -0400
+
 eheditor (0.1.2) unstable; urgency=medium
 
   * tagged v0.1.2 release build - acc6e1f84f263b47eedfbd9a0193b0af53b8455a

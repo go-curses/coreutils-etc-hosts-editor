@@ -22,7 +22,7 @@
 
 BIN_NAME := eheditor
 UNTAGGED_VERSION := v0.5.0
-UNTAGGED_COMMIT := trunk
+UNTAGGED_COMMIT := 2734d03ce3
 
 SHELL := /bin/bash
 RUN_ARGS ?= ./example.etc-hosts
