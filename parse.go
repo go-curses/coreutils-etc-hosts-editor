@@ -43,7 +43,7 @@ func ParseFile(path string) (eh *Hostfile, err error) {
 
 func processCommentBlocks(eh *Hostfile) (err error) {
 	for _, host := range eh.Hosts() {
-		if host.address == "" && len(host.domains) == 0 {
+		if host.lookup == "" && host.address == "" && len(host.domains) == 0 {
 			host.onlyComment = true
 		}
 	}
