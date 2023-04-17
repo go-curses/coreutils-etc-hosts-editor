@@ -31,6 +31,8 @@ func (e *CEheditor) requestReload() {
 		return
 	}
 	e.reloadViewer()
+	e.reloadEditor()
+	e.focusEditor(nil)
 }
 
 func (e *CEheditor) requestSave() {

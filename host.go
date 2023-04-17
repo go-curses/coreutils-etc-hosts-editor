@@ -1,3 +1,17 @@
+// Copyright (c) 2023  The Go-Curses Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package editor
 
 import (
@@ -13,9 +27,9 @@ import (
 type HostImportance string
 
 const (
-	HostNotImportant   HostImportance = "none"
-	HostImportanceIPv4 HostImportance = "ipv4"
-	HostImportanceIPv6 HostImportance = "ipv6"
+	HostNotImportant    HostImportance = "none"
+	HostIsLocalhostIPv4 HostImportance = "ipv4"
+	HostIsLocalhostIPv6 HostImportance = "ipv6"
 )
 
 type HostInfo struct {
@@ -96,7 +110,18 @@ func (h *Host) Equals(host *Host) bool {
 	host.RLock()
 	defer h.RUnlock()
 	defer host.RUnlock()
-	return h.address == host.address &&
+	hIsOnlyComment := h.IsOnlyComment()
+	hostIsOnlyComment := host.IsOnlyComment()
+	if hIsOnlyComment {
+		if hostIsOnlyComment {
+			return h.comment == host.comment
+		}
+		return false
+	} else if hostIsOnlyComment {
+		return false
+	}
+	return hIsOnlyComment == hostIsOnlyComment &&
+		h.address == host.address &&
 		h.comment == host.comment &&
 		h.active == host.active &&
 		cstrings.EqualStringSlices(h.domains, host.domains)
@@ -117,11 +142,17 @@ func (h *Host) Changed() bool {
 func (h *Host) Line() string {
 	h.RLock()
 	defer h.RUnlock()
-	active := ""
+	var active string
 	if !h.active {
 		active = "#"
 	}
-	return fmt.Sprintf("%v%v\t%v\n", active, h.address, strings.Join(h.domains, " "))
+	var address string
+	if h.address == "" || !cstrings.StringIsIP(h.address) {
+		address = "0.0.0.0"
+	} else {
+		address = h.address
+	}
+	return fmt.Sprintf("%v%v\t%v\n", active, address, strings.Join(h.domains, " "))
 }
 
 func (h *Host) Empty() bool {
@@ -138,10 +169,12 @@ func (h *Host) Block() string {
 	if h.Empty() {
 		return ""
 	}
-	isComment := h.IsComment()
+	var out string
+
+	isComment := h.IsOnlyComment()
 	h.RLock()
 	defer h.RUnlock()
-	out := ""
+
 	if isComment {
 		out += "###\n"
 		for _, line := range rxNewlines.Split(h.comment, -1) {
@@ -150,14 +183,23 @@ func (h *Host) Block() string {
 		out += "###\n"
 		return out
 	}
-	if len(h.comment) > 0 {
+
+	if h.comment != "" {
 		for _, line := range rxNewlines.Split(h.comment, -1) {
 			out += "# " + line + "\n"
 		}
 	}
-	if len(h.lookup) > 0 {
+
+	var lookup string
+	if h.address != "" && !cstrings.StringIsIP(h.address) && h.lookup == "" {
+		lookup = h.address
+	} else {
+		lookup = h.lookup
+	}
+	if lookup != "" {
 		out += fmt.Sprintf("#nslookup %v\n", h.lookup)
 	}
+
 	out += h.Line()
 	return out
 }
@@ -325,9 +367,9 @@ func (h *Host) Importance() HostImportance {
 	for _, domain := range h.domains {
 		switch domain {
 		case "localhost":
-			return HostImportanceIPv4
+			return HostIsLocalhostIPv4
 		case "ip6-allrouters", "ip6-allnodes", "ip6-loopback", "ip6-localhost":
-			return HostImportanceIPv6
+			return HostIsLocalhostIPv6
 		}
 	}
 	return HostNotImportant

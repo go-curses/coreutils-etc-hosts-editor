@@ -19,9 +19,45 @@ import (
 	"github.com/go-curses/cdk/lib/strings"
 	"github.com/go-curses/cdk/log"
 	"github.com/go-curses/ctk"
+	enums2 "github.com/go-curses/ctk/lib/enums"
 
 	"github.com/go-curses/coreutils-etc-hosts-editor"
 )
+
+func (e *CEheditor) switchToViewer() {
+	e.Window.Freeze()
+	e.ContentsHBox.Freeze()
+	for _, child := range e.ContentsHBox.GetChildren() {
+		if child.ObjectID() == e.HostsViewport.ObjectID() {
+			child.Show()
+		} else {
+			child.Hide()
+		}
+	}
+	e.EditorButton.SetTheme(DefaultButtonTheme)
+	e.ViewerButton.SetTheme(ActiveButtonTheme)
+	e.ViewerButton.GrabFocus()
+	e.reloadViewer()
+	e.ContentsHBox.Thaw()
+	e.Window.Thaw()
+	e.Window.Resize()
+	e.Display.RequestDraw()
+	e.Display.RequestSync()
+}
+
+func (e *CEheditor) makeViewer() ctk.Widget {
+	e.HostsViewport = ctk.NewScrolledViewport()
+	e.HostsViewport.SetTheme(ViewerTheme)
+	e.HostsViewport.Show()
+	e.HostsViewport.SetPolicy(enums2.PolicyAutomatic, enums2.PolicyAutomatic)
+	e.HostsVBox = ctk.NewVBox(false, 1)
+	e.HostsVBox.Show()
+	// _ = e.HostsVBox.SetBoolProperty(ctk.PropertyDebug, true)
+	e.HostsViewport.Add(e.HostsVBox)
+	// e.HostsVBox.SetBoolProperty(cdk.PropertyDebug, true)
+	// e.HostsViewport.SetBoolProperty(cdk.PropertyDebug, true)
+	return e.HostsViewport
+}
 
 func (e *CEheditor) reloadViewer() {
 	e.Window.Freeze()
@@ -47,7 +83,7 @@ func (e *CEheditor) reloadViewer() {
 
 	e.updateViewer()
 	e.Window.Thaw()
-	e.Window.Invalidate()
+	e.Window.Resize()
 	e.Display.RequestDraw()
 	e.Display.RequestSync()
 }
@@ -62,7 +98,7 @@ func (e *CEheditor) updateViewer() {
 	}
 
 	e.Window.Freeze()
-	e.HostsHBox.Freeze()
+	e.ContentsHBox.Freeze()
 	e.HostsVBox.Freeze()
 
 	if screenSize.H < 30 {
@@ -77,15 +113,15 @@ func (e *CEheditor) updateViewer() {
 
 	screenSize.Sub(2, 2)
 
-	sepWidth := screenSize.W / 7
-	if screenSize.W <= 100 {
-		sepWidth = 1
-	}
+	// sepWidth := screenSize.W / 7
+	// if screenSize.W <= 100 {
+	// 	sepWidth = 1
+	// }
 
-	e.LeftSep.SetSizeRequest(sepWidth, -1)
-	e.RightSep.SetSizeRequest(sepWidth, -1)
+	// e.LeftSep.SetSizeRequest(sepWidth, -1)
+	// e.RightSep.SetSizeRequest(sepWidth, -1)
 
-	viewerWidth := screenSize.W - (sepWidth * 2)
+	viewerWidth := screenSize.W // - (sepWidth * 2)
 	viewerWidth -= 2
 
 	existing := e.HostsVBox.GetChildren()
@@ -131,11 +167,11 @@ func (e *CEheditor) updateViewer() {
 
 	e.HostsVBox.SetSizeRequest(totalSize.W, totalSize.H)
 	e.HostsVBox.Thaw()
-	e.HostsHBox.Thaw()
-	e.HostsHBox.Resize()
+	e.ContentsHBox.Thaw()
+	e.ContentsHBox.Resize()
 	e.Window.ReApplyStyles()
 	e.Window.Thaw()
-	e.Window.Invalidate()
+	e.Window.Resize()
 	e.Display.RequestDraw()
 	e.Display.RequestShow()
 }

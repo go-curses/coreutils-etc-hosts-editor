@@ -21,8 +21,8 @@
 #export
 
 BIN_NAME := eheditor
-UNTAGGED_VERSION := v0.1.2
-UNTAGGED_COMMIT := acc6e1f84f
+UNTAGGED_VERSION := v0.5.0
+UNTAGGED_COMMIT := trunk
 
 SHELL := /bin/bash
 RUN_ARGS ?= ./example.etc-hosts

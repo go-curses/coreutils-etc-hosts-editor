@@ -261,10 +261,10 @@ func (row *ViewerRow) updateToHost(host *editor.Host, viewerWidth int) {
 			row.Host.SetAddress(changed)
 		} else if cstrings.StringIsDomainName(changed) {
 			if text != changed {
-				row.Actual.SetSensitive(true)
 				row.Actual.SetLabel("(lookup changed)")
 				row.Actual.SetTooltipText("click to perform domain lookup")
 			}
+			row.Actual.SetSensitive(true)
 			row.Host.SetAddress(changed)
 			row.Host.SetLookup(changed)
 		} else {

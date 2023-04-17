@@ -1,3 +1,6 @@
+<eheditor-window>/Window/Editor = F7
+<eheditor-window>/Window/Viewer = F8
+<eheditor-window>/File/Reload = F5
 <eheditor-window>/File/Reload = F5
 <eheditor-window>/File/Save = F3
 <eheditor-window>/File/Quit = F10

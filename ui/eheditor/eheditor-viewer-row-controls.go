@@ -185,6 +185,7 @@ func (ctrls *ViewerRowControls) Update(row *ViewerRow) {
 			"Select a type of entry to add:",
 			entries...,
 		)
+		dialog.SetSizeRequest(30, 8)
 		dialog.RunFunc(func(response enums.ResponseType, argv ...interface{}) {
 			switch response {
 			case 1: // add comment

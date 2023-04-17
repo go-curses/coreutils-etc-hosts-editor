@@ -27,16 +27,20 @@ import (
 
 func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 	e.HostsVBox.Freeze()
+	e.EditingHBox.Freeze()
 
 	var found []net.IP
 	if found, err = host.PerformLookup(); err != nil {
 		e.HostsVBox.Thaw()
+		e.EditingHBox.Thaw()
 		return err
 	}
 
 	numFound := len(found)
 	if numFound == 0 {
 		ctk.NewMessageDialog("nslookup", fmt.Sprintf("No hosts found for domain:\n%v", host.Lookup()))
+		e.HostsVBox.Thaw()
+		e.EditingHBox.Thaw()
 		return fmt.Errorf("domain hosts not found")
 	}
 
@@ -48,26 +52,30 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 	}
 
 	dialog := ctk.NewButtonMenuDialog(
-		"Select an address",
-		fmt.Sprintf("%d addresses found for:\n%v", numFound, host.Lookup()),
+		"Select an IP for: "+host.Lookup(),
+		"",
 		options...,
 	)
-
+	dialog.SetSizeRequest(42, 10)
 	dialog.RunFunc(func(response enums.ResponseType, argv ...interface{}) {
-		if len(argv) >= 1 {
-			if available, ok := argv[0].([]net.IP); ok {
-				e.HostsVBox.Thaw()
+		e.HostsVBox.Thaw()
+		e.EditingHBox.Thaw()
+		if len(argv) >= 2 {
+			h, _ := argv[0].(*editor.Host)
+			if available, ok := argv[1].([]net.IP); ok {
 				if idx := int(response); idx > 0 {
 					ip := available[idx-1]
 					log.DebugF("selected ip: %v (idx=%v,found=%v)", ip.String(), idx, found)
-					host.SetAddress(ip.String())
-					e.updateViewer()
+					h.SetAddress(ip.String())
+					e.reloadContents()
+					e.focusEditor(h)
 				} else {
 					log.DebugF("ip selection cancelled")
 				}
 			}
+
 		}
-	}, found)
+	}, host, found)
 
 	return
 }
