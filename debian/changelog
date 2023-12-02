@@ -1,3 +1,12 @@
+eheditor (0.5.1) unstable; urgency=medium
+
+  * tagged v0.5.1 release build - 98d34a96f91640d66cdc969899f6a19b2a06822a
+  * upstream changes:
+   * 98d34a9 Makefile: setting UNTAGGED_VERSION to v0.5.1
+   * 5616c58 go.mod: all modules updated; tidy
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Sat, 02 Dec 2023 11:44:46 -0500
+
 eheditor (0.5.0) unstable; urgency=medium
 
   * tagged v0.5.0 release build - 2734d03ce3768990079ac9642d9cb217fb4e3122
