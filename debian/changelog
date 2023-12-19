@@ -1,3 +1,14 @@
+eheditor (0.5.2) unstable; urgency=medium
+
+  * tagged v0.5.2 release build - e24f9519688996f911a732416048b1c853a42512
+  * upstream changes:
+   * e24f951 Makefile: setting UNTAGGED_VERSION to v0.5.2
+   * 44a310f go.mod: cdk v0.5.17; ctk v0.5.9; all modules updated; tidy
+   * 9325618 .gitignore: added apt-archives
+   * 9e77d4c .idea: purge IDE project files
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Tue, 19 Dec 2023 15:58:04 -0500
+
 eheditor (0.5.1) unstable; urgency=medium
 
   * tagged v0.5.1 release build - 98d34a96f91640d66cdc969899f6a19b2a06822a
