@@ -1,3 +1,12 @@
+eheditor (0.5.3) unstable; urgency=medium
+
+  * tagged v0.5.3 release build - a0caadfd5ac9c8069849023aba7715f9583328bd
+  * upstream changes:
+   * a0caadf Makefile: setting UNTAGGED_VERSION v0.5.3
+   * a06e76d go.mod: cdk v0.5.18; ctk v0.5.10; tidy
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Wed, 20 Dec 2023 18:00:56 -0500
+
 eheditor (0.5.2) unstable; urgency=medium
 
   * tagged v0.5.2 release build - e24f9519688996f911a732416048b1c853a42512
