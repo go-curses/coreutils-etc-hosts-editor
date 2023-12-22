@@ -1,3 +1,13 @@
+eheditor (0.5.4) unstable; urgency=medium
+
+  * tagged v0.5.4 release build - b4a033219843fdd4ebdbef74f0e3584a676a2ae4
+  * upstream changes:
+   * b4a0332 Makefile: setting UNTAGGED_VERSION to v0.5.4
+   * b8064fd Golang.cmd.mk: update to v0.1.6
+   * be80749 Golang.cdk.mk: update to v0.1.1
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Fri, 22 Dec 2023 16:31:03 -0500
+
 eheditor (0.5.3) unstable; urgency=medium
 
   * tagged v0.5.3 release build - a0caadfd5ac9c8069849023aba7715f9583328bd
