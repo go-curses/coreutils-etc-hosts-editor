@@ -16,7 +16,7 @@
 
 GOLANG_MAKEFILE_KEYS += CDK
 
-GOLANG_CDK_MK_VERSION := v0.1.0
+GOLANG_CDK_MK_VERSION := v0.1.1
 
 CUSTOM_HELP_SECTIONS += CDK_HELP
 
@@ -40,6 +40,29 @@ debug-run: debug
 	then \
 		echo "# running: ${BUILD_NAME} ${RUN_ARGS}"; \
 		( ./${BUILD_NAME} ${RUN_ARGS} ) 2>> ${GO_CDK_LOG_FILE}; \
+		if [ $$? -ne 0 ]; \
+		then \
+			stty sane; echo ""; \
+			echo "# ${BUILD_NAME} crashed, see: ./${BUILD_NAME}.cdk.log"; \
+			read -p "# Press <Enter> to reset terminal, <Ctrl+C> to cancel" RESP; \
+			reset; \
+			echo "# ${BUILD_NAME} crashed, terminal reset, see: ./${BUILD_NAME}.cdk.log"; \
+		else \
+			echo "# ${BUILD_NAME} exited normally."; \
+		fi; \
+	else \
+		echo "# ${BUILD_NAME} not found"; \
+		false; \
+	fi
+
+debug-dlv: export GO_CDK_LOG_FILE=./${BUILD_NAME}.cdk.log
+debug-dlv: export GO_CDK_LOG_LEVEL=${LOG_LEVEL}
+debug-dlv: export GO_CDK_LOG_FULL_PATHS=true
+debug-dlv: debug
+	@if [ -f ${BUILD_NAME} ]; \
+	then \
+		echo "# running: ${BUILD_NAME} ${RUN_ARGS}"; \
+		( dlv.sh ./${BUILD_NAME} ${RUN_ARGS} ) 2>> ${GO_CDK_LOG_FILE}; \
 		if [ $$? -ne 0 ]; \
 		then \
 			stty sane; echo ""; \
