@@ -14,9 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DEBIAN_MK_VERSION := v0.1.1
+DEBIAN_MK_VERSION := v0.1.2
 
 #:: begin changelog
+#
+# v0.1.2:
+#   * disable unit tests with DEB_BUILD_OPTIONS="nocheck"
 #
 # v0.1.0:
 #   * initial versioning of Debian.mk
@@ -73,7 +76,9 @@ endef
 
 define _dpkg_buildpackage =
 	if [ -n "${AE_SIGN_KEY}" ]; then \
-		env GNUPGHOME="${AE_GPG_HOME}" ${DPKG_ARCH_EXPORTS} \
+		env GNUPGHOME="${AE_GPG_HOME}" \
+			${DPKG_ARCH_EXPORTS} \
+			DEB_BUILD_OPTIONS="nocheck" \
 			${WHICH_DPKG_BUILDPACKAGE} \
 			--build=full \
 			--post-clean \
@@ -82,6 +87,7 @@ define _dpkg_buildpackage =
 			--sign-key="${AE_SIGN_KEY}"; \
 	else \
 		env ${DPKG_ARCH_EXPORTS} \
+			DEB_BUILD_OPTIONS="nocheck" \
 			${WHICH_DPKG_BUILDPACKAGE} \
 			--build=full \
 			--post-clean \
