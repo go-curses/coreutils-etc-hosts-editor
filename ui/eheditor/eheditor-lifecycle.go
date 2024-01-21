@@ -26,7 +26,7 @@ import (
 	"github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
-func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.EventFlag {
+func (e *CEheditor) startup(_ []interface{}, argv ...interface{}) enums.EventFlag {
 	var err error
 	var ok bool
 	if e.App, e.Display, _, _, _, ok = ctk.ArgvApplicationSignalStartup(argv...); ok {
@@ -49,7 +49,6 @@ func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.Event
 			e.ReadOnlyMode = true
 		}
 
-		// e.Display.CaptureCtrlC()
 		if s := e.Display.Screen(); s != nil {
 			s.EnableHostClipboard(true)
 		}
@@ -76,7 +75,6 @@ func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.Event
 
 		e.Window = ctk.NewWindowWithTitle(title)
 		e.Window.SetName("eheditor-window")
-		// e.Window.Show()
 		e.Window.SetTheme(WindowTheme)
 		// e.Window.SetDecorated(false)
 		// _ = e.Window.SetBoolProperty(ctk.PropertyDebug, true)
