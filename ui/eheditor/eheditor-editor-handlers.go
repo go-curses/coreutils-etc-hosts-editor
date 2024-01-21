@@ -44,13 +44,13 @@ func (e *CEheditor) activateSidebarAddRowHandler(data []interface{}, argv ...int
 			e.SidebarAddEntryButton.LogDebug("add comment at index: %v", idx)
 			h := editor.NewComment("")
 			e.HostFile.InsertHost(h, idx)
-			e.reloadContents()
+			e.requestReloadContents()
 			e.focusEditor(h)
 		case 2: // add host
 			e.SidebarAddEntryButton.LogDebug("add host at index: %v", idx)
 			h := editor.NewHostFromInfo(editor.HostInfo{})
 			e.HostFile.InsertHost(h, idx)
-			e.reloadContents()
+			e.requestReloadContents()
 			e.focusEditor(h)
 		default:
 			if responseId := int(response); responseId < 0 {

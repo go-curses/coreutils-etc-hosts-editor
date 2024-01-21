@@ -106,9 +106,3 @@ func (e *CEheditor) Run(argv []string) (err error) {
 	err = e.App.Run(argv)
 	return
 }
-
-func (e *CEheditor) reloadContents() {
-	e.reloadViewer()
-	e.reloadEditor()
-	e.focusEditor(nil)
-}

@@ -63,7 +63,7 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 					ip := available[idx-1]
 					log.DebugF("selected ip: %v (idx=%v,found=%v)", ip.String(), idx, found)
 					h.SetAddress(ip.String())
-					e.reloadContents()
+					e.requestReloadContents()
 					e.focusEditor(h)
 				} else {
 					log.DebugF("ip selection cancelled")

@@ -30,7 +30,10 @@ func (e *CEheditor) requestReload() {
 		log.Error(e.LastError)
 		return
 	}
-	e.reloadViewer()
+	e.requestReloadContents()
+}
+
+func (e *CEheditor) requestReloadContents() {
 	e.reloadEditor()
 	e.focusEditor(nil)
 }
