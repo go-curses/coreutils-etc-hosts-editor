@@ -12,40 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	"fmt"
 
 	"github.com/go-curses/cdk/log"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor"
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
-func (e *CEheditor) requestReload() {
-	log.DebugF("reloading from: %v", e.SourceFile)
+func (c *CUI) requestReload() {
+	log.DebugF("reloading from: %v", c.SourceFile)
 	var err error
-	if e.HostFile, err = editor.ParseFile(e.SourceFile); err != nil {
-		e.LastError = fmt.Errorf("error parsing %v: %v", e.SourceFile, err)
-		log.Error(e.LastError)
+	if c.HostFile, err = editor.ParseFile(c.SourceFile); err != nil {
+		c.LastError = fmt.Errorf("error parsing %v: %v", c.SourceFile, err)
+		log.Error(c.LastError)
 		return
 	}
-	e.reloadViewer()
-	e.reloadEditor()
-	e.focusEditor(nil)
+	c.requestReloadContents()
 }
 
-func (e *CEheditor) requestSave() {
-	log.DebugF("saving to: %v", e.SourceFile)
-	if e.HostFile != nil {
-		if err := e.HostFile.Save(); err != nil {
+func (c *CUI) requestReloadContents() {
+	c.reloadEditor()
+	c.focusEditor(nil)
+}
+
+func (c *CUI) requestSave() {
+	log.DebugF("saving to: %v", c.SourceFile)
+	if c.HostFile != nil {
+		if err := c.HostFile.Save(); err != nil {
 			log.Error(err)
 		}
 	}
-	e.requestReload()
-	e.QuitButton.GrabFocus()
+	c.requestReload()
+	c.QuitButton.GrabFocus()
 }
 
-func (e *CEheditor) requestQuit() {
-	e.Display.RequestQuit()
+func (c *CUI) requestQuit() {
+	c.Display.RequestQuit()
 }

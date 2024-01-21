@@ -21,8 +21,8 @@
 #export
 
 BIN_NAME := eheditor
-UNTAGGED_VERSION := v0.5.6
-UNTAGGED_COMMIT := fae34db9e3
+UNTAGGED_VERSION := v0.7.0
+UNTAGGED_COMMIT := trunk
 
 SHELL := /bin/bash
 RUN_ARGS ?= ./example.etc-hosts
@@ -48,11 +48,4 @@ BUILD_RELEASE_VAR := main.BuildRelease
 
 SRC_CMD_PATH := ./cmd/eheditor
 
-include Golang.cmd.mk
-include Golang.def.mk
-include Golang.cdk.mk
-
-#: begin debian packaging branch changes
-PACKAGING_NAME := eheditor
-include Debian.mk
-#: end debian packaging branch changes
+include Golang.mk

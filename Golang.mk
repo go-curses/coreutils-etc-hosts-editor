@@ -14,11 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GOLANG_MAKEFILE_KEYS += CMD
-GOLANG_CMD_MK_VERSION := v0.1.8
+MAKEFILE_KEYS += GOLANG
+GOLANG_MK_FILE := Golang.mk
+GOLANG_MK_VERSION := v0.2.0
+GOLANG_MK_DESCRIPTION := globals, functions and internal targets
 
-.PHONY: __golang __tidy __local __unlocal __be_update
-.PHONY: __vet __test __cover __generate
+.PHONY: __golang __deps __generate
+.PHONY: __vet __test __coverage
+.PHONY: __tidy __fmt __reportcard
+.PHONY: __local __unlocal __be_update
 
 PWD := $(shell pwd)
 SHELL := /bin/bash
@@ -66,6 +70,18 @@ endif
 _INTERNAL_BUILD_LOG_ ?= /dev/null
 
 -include Golang.lib.mk
+-include Golang.cdk.mk
+-include Golang.def.mk
+
+_BUILD_TAGS ?= $(call __build_tags)
+
+define __build_tags
+$(shell \
+	echo "${BUILD_TAGS}" \
+		| perl -pe 's!\s*\n! !g;s!\s+! !g;' \
+		| perl -pe 's!\s+!,!g;s!^,!!;s!,\s*$$!!;' \
+)
+endef
 
 define __clean
 	for FOUND in $(1); do \
@@ -186,7 +202,21 @@ $(shell \
 		fi; \
 	fi; \
 	if [ "$${ERR}" == "false" ]; then \
-		echo "${CMD} \
+		if [ -n "${_BUILD_TAGS}" ]; then \
+			echo "${CMD} \
+ GOOS=\"$(2)\" GOARCH=\"$(3)\" \
+ CGO_ENABLED=1 CC=$${CC_VAL} CXX=$${CXX_VAL} \
+  $(call __go_bin) \
+    build -v \
+    -o \"$(1)\" \
+    -ldflags=\"-buildid='' $(4)\" \
+    -gcflags=\"$(5)\" \
+    -asmflags=\"$(6)\" \
+    -tags \"${_BUILD_TAGS}\" \
+    $(7) \
+    $(8)"; \
+		else \
+			echo "${CMD} \
  GOOS=\"$(2)\" GOARCH=\"$(3)\" \
  CGO_ENABLED=1 CC=$${CC_VAL} CXX=$${CXX_VAL} \
   $(call __go_bin) \
@@ -197,6 +227,7 @@ $(shell \
     -asmflags=\"$(6)\" \
     $(7) \
     $(8)"; \
+		fi; \
 	else \
 		echo "echo ERROR missing go binary"; \
 	fi
@@ -223,8 +254,8 @@ endef
 # 1: bin-name, 2: goos, 3: goarch, 4: src
 define __go_build_debug
 	echo "# building $(2)-$(3) (debug): ${BIN_NAME} (${BUILD_VERSION}, ${BUILD_RELEASE})"; \
-	echo $(call __cmd_go_build,$(1),$(2),$(3),,all="-l" -N -l,,,$(4)); \
-	$(call __cmd_go_build,$(1),$(2),$(3),,all="-l" -N -l,,,$(4))
+	echo $(call __cmd_go_build,$(1),$(2),$(3),,all="-N -l",,,$(4)); \
+	$(call __cmd_go_build,$(1),$(2),$(3),,all="-N -l",,,$(4))
 endef
 
 define __upx_build
@@ -249,7 +280,7 @@ $(if ${GOPKG_KEYS},$(foreach key,${GOPKG_KEYS},$(shell \
 			-n "$($(key)_GO_PACKAGE)" \
 			-a "$($(key)_GO_PACKAGE)" != "nil" \
 		]; then \
-			echo "$($(key)_GO_PACKAGE)@latest"; \
+			echo "$($(key)_GO_PACKAGE)@$(if $($(key)_LATEST_VER),$($(key)_LATEST_VER),latest)"; \
 		fi \
 )))
 endef
@@ -299,6 +330,8 @@ __golang:
 
 __deps: __golang
 	@echo "# installing dependencies"
+	@echo "#: goimports"
+	@$(call __go_bin) install golang.org/x/tools/cmd/goimports@latest
 	@echo "#: goconvey"
 	@$(call __go_bin) install github.com/smartystreets/goconvey@latest
 	@echo "#: govulncheck"
@@ -367,7 +400,7 @@ __be_update: PKG_LIST=$(call __pkg_list_latest)
 __be_update: __golang
 	@$(call __validate_extra_pkgs)
 	@echo "# go getting: ${PKG_LIST}"
-	@GOPROXY=direct $(call __go_bin) get ${_BUILD_TAGS} ${PKG_LIST}
+	@GOPROXY=direct $(call __go_bin) get ${PKG_LIST}
 
 __vet: __golang
 	@echo -n "# go vet ./..."

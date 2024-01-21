@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	"fmt"
@@ -22,25 +22,22 @@ import (
 	"github.com/go-curses/ctk"
 	"github.com/go-curses/ctk/lib/enums"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor"
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
-func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
-	e.HostsVBox.Freeze()
-	e.EditingHBox.Freeze()
+func (c *CUI) newNsLookupDialog(host *editor.Host) (err error) {
+	c.EditingHBox.Freeze()
 
 	var found []net.IP
 	if found, err = host.PerformLookup(); err != nil {
-		e.HostsVBox.Thaw()
-		e.EditingHBox.Thaw()
+		c.EditingHBox.Thaw()
 		return err
 	}
 
 	numFound := len(found)
 	if numFound == 0 {
 		ctk.NewMessageDialog("nslookup", fmt.Sprintf("No hosts found for domain:\n%v", host.Lookup()))
-		e.HostsVBox.Thaw()
-		e.EditingHBox.Thaw()
+		c.EditingHBox.Thaw()
 		return fmt.Errorf("domain hosts not found")
 	}
 
@@ -58,8 +55,7 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 	)
 	dialog.SetSizeRequest(42, 10)
 	dialog.RunFunc(func(response enums.ResponseType, argv ...interface{}) {
-		e.HostsVBox.Thaw()
-		e.EditingHBox.Thaw()
+		c.EditingHBox.Thaw()
 		if len(argv) >= 2 {
 			h, _ := argv[0].(*editor.Host)
 			if available, ok := argv[1].([]net.IP); ok {
@@ -67,8 +63,8 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 					ip := available[idx-1]
 					log.DebugF("selected ip: %v (idx=%v,found=%v)", ip.String(), idx, found)
 					h.SetAddress(ip.String())
-					e.reloadContents()
-					e.focusEditor(h)
+					c.requestReloadContents()
+					c.focusEditor(h)
 				} else {
 					log.DebugF("ip selection cancelled")
 				}

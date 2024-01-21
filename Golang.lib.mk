@@ -14,18 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GOLANG_MAKEFILE_KEYS += LIB
-GOLANG_LIB_MK_VERSION := v0.1.3
-
-#
-#: Go-Curses Packages
-#
-
-CDK_GO_PACKAGE ?= github.com/go-curses/cdk
-CDK_LOCAL_PATH ?= ../cdk
-
-CTK_GO_PACKAGE ?= github.com/go-curses/ctk
-CTK_LOCAL_PATH ?= ../ctk
+MAKEFILE_KEYS += GOLANG_LIB
+GOLANG_LIB_MK_FILE := Golang.lib.mk
+GOLANG_LIB_MK_VERSION := v0.2.0
+GOLANG_LIB_MK_DESCRIPTION := go-corelibs support
 
 #
 #: Core Library Packages
@@ -65,6 +57,10 @@ endif
 
 ifeq (diff,$(shell echo "${FOUND_CORELIBS}" | grep '^diff$$'))
 GOPKG_KEYS += CL_DIFF
+endif
+
+ifeq (env,$(shell echo "${FOUND_CORELIBS}" | grep '^env$$'))
+GOPKG_KEYS += CL_ENV
 endif
 
 ifeq (filewriter,$(shell echo "${FOUND_CORELIBS}" | grep '^filewriter$$'))
@@ -142,6 +138,9 @@ CL_CONVERT_LOCAL_PATH ?= ${CORELIBS_PATH}/convert
 
 CL_DIFF_GO_PACKAGE ?= ${CORELIBS_BASE}/diff
 CL_DIFF_LOCAL_PATH ?= ${CORELIBS_PATH}/diff
+
+CL_ENV_GO_PACKAGE ?= ${CORELIBS_BASE}/env
+CL_ENV_LOCAL_PATH ?= ${CORELIBS_PATH}/env
 
 CL_FILEWRITER_GO_PACKAGE ?= ${CORELIBS_BASE}/filewriter
 CL_FILEWRITER_LOCAL_PATH ?= ${CORELIBS_PATH}/filewriter

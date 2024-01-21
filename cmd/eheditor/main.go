@@ -20,46 +20,22 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"github.com/go-curses/cdk"
-	cstrings "github.com/go-curses/cdk/lib/strings"
 	"github.com/go-curses/cdk/log"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor/ui/eheditor"
-)
-
-// Build Configuration Flags
-// setting these will enable command line flags and their corresponding features
-// use `go build -v -ldflags="-X 'main.IncludeLogFullPaths=false'"`
-var (
-	IncludeProfiling          = "false"
-	IncludeLogFile            = "false"
-	IncludeLogFormat          = "false"
-	IncludeLogFullPaths       = "false"
-	IncludeLogLevel           = "false"
-	IncludeLogLevels          = "false"
-	IncludeLogTimestamps      = "false"
-	IncludeLogTimestampFormat = "false"
-	IncludeLogOutput          = "false"
+	"github.com/go-curses/coreutils-etc-hosts-editor/ui"
 )
 
 var (
-	BuildVersion = "0.5.6"
+	BuildVersion = "0.7.0"
 	BuildRelease = "trunk"
 )
 
 func init() {
-	cdk.Build.Profiling = cstrings.IsTrue(IncludeProfiling)
-	cdk.Build.LogFile = cstrings.IsTrue(IncludeLogFile)
-	cdk.Build.LogFormat = cstrings.IsTrue(IncludeLogFormat)
-	cdk.Build.LogFullPaths = cstrings.IsTrue(IncludeLogFullPaths)
-	cdk.Build.LogLevel = cstrings.IsTrue(IncludeLogLevel)
-	cdk.Build.LogLevels = cstrings.IsTrue(IncludeLogLevels)
-	cdk.Build.LogTimestamps = cstrings.IsTrue(IncludeLogTimestamps)
-	cdk.Build.LogTimestampFormat = cstrings.IsTrue(IncludeLogTimestampFormat)
-	cdk.Build.LogOutput = cstrings.IsTrue(IncludeLogOutput)
+	cdk.AppCliTtyFlag.Category = ""
 }
 
 func main() {
-	ehe := eheditor.NewEheditor(
+	ehe := ui.NewUI(
 		"eheditor",
 		"etc hosts editor",
 		"command line utility for managing the OS /etc/hosts file",
@@ -73,11 +49,6 @@ func main() {
 	appCLI.HideHelpCommand = true
 	appCLI.EnableBashCompletion = true
 	appCLI.UseShortOptionHandling = true
-	ehe.App.AddFlag(&cli.BoolFlag{
-		Name:   "with-old-version",
-		Usage:  "include the original version user-interface",
-		Hidden: true,
-	})
 	ehe.App.AddFlag(&cli.BoolFlag{
 		Name:    "read-only",
 		Usage:   "do not write any changes to the etc hosts file",
