@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	"github.com/go-curses/cdk/lib/enums"
 	"github.com/go-curses/ctk"
 )
 
-func (e *CEheditor) makeAccelmap() (ag ctk.AccelGroup) {
+func (c *CUI) makeAccelmap() (ag ctk.AccelGroup) {
 	ag = ctk.NewAccelGroup()
 	ag.ConnectByPath(
 		"<eheditor-window>/File/Quit",
 		"quit-accel",
 		func(argv ...interface{}) (handled bool) {
 			ag.LogDebug("quit-accel called")
-			e.requestQuit()
+			c.requestQuit()
 			return
 		},
 	)
@@ -35,7 +35,7 @@ func (e *CEheditor) makeAccelmap() (ag ctk.AccelGroup) {
 		"reload-accel",
 		func(argv ...interface{}) (handled bool) {
 			ag.LogDebug("reload-accel called")
-			e.requestReload()
+			c.requestReload()
 			return
 		},
 	)
@@ -44,52 +44,52 @@ func (e *CEheditor) makeAccelmap() (ag ctk.AccelGroup) {
 		"save-accel",
 		func(argv ...interface{}) (handled bool) {
 			ag.LogDebug("save-accel called")
-			e.requestSave()
+			c.requestSave()
 			return
 		},
 	)
 	return
 }
 
-func (e *CEheditor) makeActionButtonBox() ctk.HButtonBox {
-	e.ActionHBox = ctk.NewHButtonBox(false, 1)
-	e.ActionHBox.Show()
-	e.ActionHBox.SetSizeRequest(-1, 1)
+func (c *CUI) makeActionButtonBox() ctk.HButtonBox {
+	c.ActionHBox = ctk.NewHButtonBox(false, 1)
+	c.ActionHBox.Show()
+	c.ActionHBox.SetSizeRequest(-1, 1)
 
 	actionSep := ctk.NewSeparator()
 	actionSep.Show()
-	e.ActionHBox.PackEnd(actionSep, true, true, 0)
+	c.ActionHBox.PackEnd(actionSep, true, true, 0)
 
-	e.SaveButton = ctk.NewButtonWithMnemonic("_Save <F3>")
-	e.SaveButton.Show()
-	e.SaveButton.SetSizeRequest(-1, 1)
-	if e.ReadOnlyMode {
-		e.SaveButton.SetSensitive(false)
+	c.SaveButton = ctk.NewButtonWithMnemonic("_Save <F3>")
+	c.SaveButton.Show()
+	c.SaveButton.SetSizeRequest(-1, 1)
+	if c.ReadOnlyMode {
+		c.SaveButton.SetSensitive(false)
 	} else {
-		e.SaveButton.Connect(ctk.SignalActivate, "save-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-			e.requestSave()
+		c.SaveButton.Connect(ctk.SignalActivate, "save-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
+			c.requestSave()
 			return enums.EVENT_STOP
 		})
 	}
-	e.ActionHBox.PackEnd(e.SaveButton, false, false, 0)
+	c.ActionHBox.PackEnd(c.SaveButton, false, false, 0)
 
-	e.ReloadButton = ctk.NewButtonWithMnemonic("_Reload <F5>")
-	e.ReloadButton.Show()
-	e.ReloadButton.SetSizeRequest(-1, 1)
-	e.ReloadButton.Connect(ctk.SignalActivate, "reload-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-		e.requestReload()
+	c.ReloadButton = ctk.NewButtonWithMnemonic("_Reload <F5>")
+	c.ReloadButton.Show()
+	c.ReloadButton.SetSizeRequest(-1, 1)
+	c.ReloadButton.Connect(ctk.SignalActivate, "reload-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
+		c.requestReload()
 		return enums.EVENT_STOP
 	})
-	e.ActionHBox.PackEnd(e.ReloadButton, false, false, 0)
+	c.ActionHBox.PackEnd(c.ReloadButton, false, false, 0)
 
-	e.QuitButton = ctk.NewButtonWithMnemonic("_Quit <F10>")
-	e.QuitButton.Show()
-	e.QuitButton.SetSizeRequest(-1, 1)
-	e.QuitButton.Connect(ctk.SignalActivate, "quit-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-		e.requestQuit()
+	c.QuitButton = ctk.NewButtonWithMnemonic("_Quit <F10>")
+	c.QuitButton.Show()
+	c.QuitButton.SetSizeRequest(-1, 1)
+	c.QuitButton.Connect(ctk.SignalActivate, "quit-hosts", func(data []interface{}, argv ...interface{}) enums.EventFlag {
+		c.requestQuit()
 		return enums.EVENT_STOP
 	})
-	e.ActionHBox.PackEnd(e.QuitButton, false, false, 0)
+	c.ActionHBox.PackEnd(c.QuitButton, false, false, 0)
 
-	return e.ActionHBox
+	return c.ActionHBox
 }

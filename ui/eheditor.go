@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	_ "embed"
@@ -38,7 +38,7 @@ const (
 	ListByEntry
 )
 
-type CEheditor struct {
+type CUI struct {
 	App ctk.Application
 
 	HostFile     *editor.Hostfile
@@ -92,8 +92,8 @@ type CEheditor struct {
 	sync.RWMutex
 }
 
-func NewEheditor(name string, usage string, description string, version string, tag string, title string, ttyPath string) (e *CEheditor) {
-	e = &CEheditor{
+func NewUI(name string, usage string, description string, version string, tag string, title string, ttyPath string) (e *CUI) {
+	e = &CUI{
 		App: ctk.NewApplication(name, usage, description, version, tag, title, ttyPath),
 	}
 	e.App.Connect(cdk.SignalStartup, "eheditor-startup-handler", e.startup)
@@ -102,7 +102,7 @@ func NewEheditor(name string, usage string, description string, version string, 
 	return
 }
 
-func (e *CEheditor) Run(argv []string) (err error) {
-	err = e.App.Run(argv)
+func (c *CUI) Run(argv []string) (err error) {
+	err = c.App.Run(argv)
 	return
 }

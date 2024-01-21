@@ -21,7 +21,7 @@ import (
 
 	"github.com/go-curses/cdk/log"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor/ui/eheditor"
+	"github.com/go-curses/coreutils-etc-hosts-editor/ui"
 )
 
 var (
@@ -30,7 +30,7 @@ var (
 )
 
 func main() {
-	ehe := eheditor.NewEheditor(
+	ehe := ui.NewUI(
 		"eheditor",
 		"etc hosts editor",
 		"command line utility for managing the OS /etc/hosts file",

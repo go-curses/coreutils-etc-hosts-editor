@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	cenums "github.com/go-curses/cdk/lib/enums"
@@ -24,8 +24,8 @@ import (
 
 const gSidebarAddRowHandler = "editor-add-row-handler"
 
-func (e *CEheditor) activateSidebarAddRowHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
-	idx := e.HostFile.Len()
+func (c *CUI) activateSidebarAddRowHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
+	idx := c.HostFile.Len()
 
 	var entries []interface{}
 	entries = append(entries, "Comment Entry", 1)
@@ -41,20 +41,20 @@ func (e *CEheditor) activateSidebarAddRowHandler(data []interface{}, argv ...int
 	dialog.RunFunc(func(response enums.ResponseType, argv ...interface{}) {
 		switch response {
 		case 1: // add comment
-			e.SidebarAddEntryButton.LogDebug("add comment at index: %v", idx)
+			c.SidebarAddEntryButton.LogDebug("add comment at index: %v", idx)
 			h := editor.NewComment("")
-			e.HostFile.InsertHost(h, idx)
-			e.requestReloadContents()
-			e.focusEditor(h)
+			c.HostFile.InsertHost(h, idx)
+			c.requestReloadContents()
+			c.focusEditor(h)
 		case 2: // add host
-			e.SidebarAddEntryButton.LogDebug("add host at index: %v", idx)
+			c.SidebarAddEntryButton.LogDebug("add host at index: %v", idx)
 			h := editor.NewHostFromInfo(editor.HostInfo{})
-			e.HostFile.InsertHost(h, idx)
-			e.requestReloadContents()
-			e.focusEditor(h)
+			c.HostFile.InsertHost(h, idx)
+			c.requestReloadContents()
+			c.focusEditor(h)
 		default:
 			if responseId := int(response); responseId < 0 {
-				e.SidebarAddEntryButton.LogDebug("new entry action cancelled")
+				c.SidebarAddEntryButton.LogDebug("new entry action cancelled")
 			} else {
 				log.ErrorF("unhandled dialog response: %v", response)
 			}
@@ -66,66 +66,66 @@ func (e *CEheditor) activateSidebarAddRowHandler(data []interface{}, argv ...int
 
 const gSidebarMoveRowUpHandler = "editor-move-row-up-handler"
 
-func (e *CEheditor) activateSidebarMoveRowUpHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
-	if e.SelectedHost == nil {
+func (c *CUI) activateSidebarMoveRowUpHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
+	if c.SelectedHost == nil {
 		return cenums.EVENT_STOP
 	}
-	thisIdx := e.HostFile.IndexOf(e.SelectedHost)
+	thisIdx := c.HostFile.IndexOf(c.SelectedHost)
 	nextIdx := thisIdx - 1
 	if nextIdx < 0 {
 		return cenums.EVENT_STOP
 	}
-	e.HostFile.MoveHost(thisIdx, nextIdx)
-	e.reloadEditor()
-	e.focusEditor(e.SelectedHost)
+	c.HostFile.MoveHost(thisIdx, nextIdx)
+	c.reloadEditor()
+	c.focusEditor(c.SelectedHost)
 	return cenums.EVENT_STOP
 }
 
 const gSidebarMoveRowDownHandler = "editor-move-row-down-handler"
 
-func (e *CEheditor) activateSidebarMoveRowDownHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
-	if e.SelectedHost == nil {
+func (c *CUI) activateSidebarMoveRowDownHandler(data []interface{}, argv ...interface{}) cenums.EventFlag {
+	if c.SelectedHost == nil {
 		return cenums.EVENT_STOP
 	}
-	lastIdx := e.HostFile.Len() - 1
-	thisIdx := e.HostFile.IndexOf(e.SelectedHost)
+	lastIdx := c.HostFile.Len() - 1
+	thisIdx := c.HostFile.IndexOf(c.SelectedHost)
 	nextIdx := thisIdx + 1
 	if nextIdx > lastIdx {
 		return cenums.EVENT_STOP
 	}
-	e.HostFile.MoveHost(thisIdx, nextIdx)
-	e.reloadEditor()
-	e.focusEditor(e.SelectedHost)
+	c.HostFile.MoveHost(thisIdx, nextIdx)
+	c.reloadEditor()
+	c.focusEditor(c.SelectedHost)
 	return cenums.EVENT_STOP
 }
 
-func (e *CEheditor) updateSidebarActionButtons() {
-	if e.SidebarMode != ListByEntry {
-		e.SidebarMoveEntryUpButton.Hide()
-		e.SidebarMoveEntryDownButton.Hide()
+func (c *CUI) updateSidebarActionButtons() {
+	if c.SidebarMode != ListByEntry {
+		c.SidebarMoveEntryUpButton.Hide()
+		c.SidebarMoveEntryDownButton.Hide()
 		return
 	}
-	e.SidebarMoveEntryUpButton.Show()
-	e.SidebarMoveEntryDownButton.Show()
+	c.SidebarMoveEntryUpButton.Show()
+	c.SidebarMoveEntryDownButton.Show()
 	var thisIdx int
-	if e.SelectedHost == nil {
+	if c.SelectedHost == nil {
 		thisIdx = -1
 	} else {
-		thisIdx = e.HostFile.IndexOf(e.SelectedHost)
+		thisIdx = c.HostFile.IndexOf(c.SelectedHost)
 	}
-	lastIdx := e.HostFile.Len() - 1
+	lastIdx := c.HostFile.Len() - 1
 	switch {
 	case thisIdx == 0:
-		e.SidebarMoveEntryUpButton.SetSensitive(false)
-		e.SidebarMoveEntryDownButton.SetSensitive(true)
+		c.SidebarMoveEntryUpButton.SetSensitive(false)
+		c.SidebarMoveEntryDownButton.SetSensitive(true)
 	case thisIdx == lastIdx:
-		e.SidebarMoveEntryUpButton.SetSensitive(true)
-		e.SidebarMoveEntryDownButton.SetSensitive(false)
+		c.SidebarMoveEntryUpButton.SetSensitive(true)
+		c.SidebarMoveEntryDownButton.SetSensitive(false)
 	case thisIdx > 0 && thisIdx < lastIdx:
-		e.SidebarMoveEntryUpButton.SetSensitive(true)
-		e.SidebarMoveEntryDownButton.SetSensitive(true)
+		c.SidebarMoveEntryUpButton.SetSensitive(true)
+		c.SidebarMoveEntryDownButton.SetSensitive(true)
 	default:
-		e.SidebarMoveEntryUpButton.SetSensitive(false)
-		e.SidebarMoveEntryDownButton.SetSensitive(false)
+		c.SidebarMoveEntryUpButton.SetSensitive(false)
+		c.SidebarMoveEntryDownButton.SetSensitive(false)
 	}
 }

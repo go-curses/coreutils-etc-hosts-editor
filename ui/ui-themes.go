@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package eheditor
+package ui
 
 import (
 	"github.com/go-curses/cdk/lib/paint"
@@ -20,7 +20,6 @@ import (
 )
 
 var (
-	ViewerTheme paint.Theme
 	WindowTheme paint.Theme
 
 	ActiveButtonTheme  paint.Theme
@@ -43,31 +42,6 @@ func init() {
 	style := paint.GetDefaultColorStyle()
 	style = style.Background(paint.ColorNavy)
 	styleLight := style.Foreground(paint.ColorWhite)
-	styleDark := style.Foreground(paint.ColorDarkGray)
-
-	ViewerTheme = theme.Clone()
-
-	ViewerTheme.Content.Normal = styleDark.Dim(true)
-	ViewerTheme.Content.Selected = styleLight.Dim(false)
-	ViewerTheme.Content.Active = styleLight.Dim(false)
-	ViewerTheme.Content.Prelight = styleLight.Dim(false)
-	ViewerTheme.Content.Insensitive = styleDark.Dim(true)
-	ViewerTheme.Content.FillRune = paint.DefaultFillRune
-	ViewerTheme.Content.BorderRunes = borders
-	ViewerTheme.Content.ArrowRunes = arrows
-	ViewerTheme.Content.Overlay = false
-
-	ViewerTheme.Border.Normal = styleDark.Dim(true)
-	ViewerTheme.Border.Selected = styleLight.Dim(false)
-	ViewerTheme.Border.Active = styleLight.Dim(false)
-	ViewerTheme.Border.Prelight = styleLight.Dim(false)
-	ViewerTheme.Border.Insensitive = styleDark.Dim(true)
-	ViewerTheme.Border.FillRune = paint.DefaultFillRune
-	ViewerTheme.Border.BorderRunes = borders
-	ViewerTheme.Border.ArrowRunes = arrows
-	ViewerTheme.Border.Overlay = false
-
-	paint.RegisterTheme(paint.ColorTheme, ViewerTheme)
 
 	WindowTheme = theme.Clone()
 
