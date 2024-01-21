@@ -1,3 +1,20 @@
+eheditor (0.7.0) unstable; urgency=medium
+
+  * tagged v0.7.0 release build - b2c68463eff2d4ff7c8085a9309cfdb5521ff631
+  * upstream changes:
+   * b2c6846 Makefile,cmd: setting versions to v0.7.0
+   * 25cf031 go.mod: maps v1.1.0; go 1.21.5; tidy
+   * 0c12c03 Makefile,Golang*mk: migrate to Golang v0.2.0 build system
+   * 699801b cmd: work around cli categories with no visible flags showing up in --help
+   * 9b83f8c *.go: gofmt -s; goimports
+   * 91d98ec ui: moved ui/eheditor to just ui; renamed Eheditor to CUI; purged old ViewerTheme; migrate to go-corelibs/maps, purge maps.go; code cosmetic changes
+   * 5329d2f ui: code cosmetic changes
+   * 0bb0441 ui: move and rename reloadContents to requestReloadContents; remove code duplication and use requestReloadContents in requestReload
+   * a0034c3 cmd: purging deprecated cdk.Build Include* passthroughs
+   * 5221fec cmd,ui: purging --with-old-version ui mode
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Sun, 21 Jan 2024 15:13:57 -0500
+
 eheditor (0.5.6) unstable; urgency=medium
 
   * tagged v0.5.6 release build - fae34db9e3423fbeef3d0d5b7f75ac0cc2891e53
