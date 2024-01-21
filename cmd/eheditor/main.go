@@ -19,6 +19,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
+	"github.com/go-curses/cdk"
 	"github.com/go-curses/cdk/log"
 
 	"github.com/go-curses/coreutils-etc-hosts-editor/ui"
@@ -28,6 +29,10 @@ var (
 	BuildVersion = "0.5.6"
 	BuildRelease = "trunk"
 )
+
+func init() {
+	cdk.AppCliTtyFlag.Category = ""
+}
 
 func main() {
 	ehe := ui.NewUI(
