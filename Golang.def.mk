@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GOLANG_MAKEFILE_KEYS += DEF
-GOLANG_DEF_MK_VERSION := v0.1.3
+MAKEFILE_KEYS += GOLANG_DEF
+GOLANG_DEF_MK_FILE := Golang.def.mk
+GOLANG_DEF_MK_VERSION := v0.2.0
+GOLANG_DEF_MK_DESCRIPTION := make target definitions
 
-.PHONY: all help
+.PHONY: help
 .PHONY: clean distclean realclean
 .PHONY: local unlocal deps tidy fmt be-update generate
 .PHONY: debug build build-all build-amd64 build-arm64
@@ -29,7 +31,10 @@ SRC_CMD_PATH ?= .
 SRC_AUTOCOMPLETE_FILE ?= ./bash_autocomplete
 CUSTOM_HELP_KEYS ?=
 
-all: help
+INCLUDE_DEFAULT_AUTOCOMPLETE_FILE ?= true
+ifeq (${INCLUDE_DEFAULT_AUTOCOMPLETE_FILE},true)
+AUTOCOMPLETE_FILES += ${INSTALL_AUTOCOMPLETE_PATH}/${BIN_NAME}
+endif
 
 help:
 	@echo "usage: make [target]"
@@ -37,12 +42,14 @@ help:
 	@echo "golang qa targets:"
 	@echo "  test           - perform all available tests"
 	@echo "  coverage       - generate coverage reports"
+	@echo "  goconvey       - start goconvey http://${GOCONVEY_HOST}:${GOCONVEY_PORT}"
 	@echo "  reportcard     - run sanity checks"
 
 	@echo
 	@echo "cleanup targets:"
-	@echo "  clean       - cleans package and built files"
-	@echo "  distclean   - clean and removes extraneous files"
+	@echo "  clean       - removes CLEAN_FILES (${CLEAN_FILES})"
+	@echo "  distclean   - clean and DISTCLEAN_FILES (${DISTCLEAN_FILES})"
+	@echo "  realclean   - distclean REALCLEAN_FILES (${REALCLEAN_FILES})"
 
 	@echo
 	@echo "build targets:"
@@ -64,6 +71,11 @@ help:
 	@echo "  install       - installs ${BUILD_NAME} to ${DESTDIR}${prefix}/bin/${BIN_NAME}"
 	@echo "  install-arm64 - installs ${BIN_NAME}.${BUILD_OS}.arm64 to ${DESTDIR}${prefix}/bin/${BIN_NAME}"
 	@echo "  install-amd64 - installs ${BIN_NAME}.${BUILD_OS}.amd64 to ${DESTDIR}${prefix}/bin/${BIN_NAME}"
+ifneq (${AUTOCOMPLETE_FILES},)
+	@echo "  install-autocomplete"
+	@echo "                - installs ${SRC_AUTOCOMPLETE_FILE} to:"
+	@$(foreach dst,${AUTOCOMPLETE_FILES},echo "                    $(dst)";)
+endif
 
 ifdef help_custom_targets
 	@echo
@@ -88,13 +100,18 @@ $(foreach key,$($(section)_KEYS),; echo "  $($(section)_$(key)_TARGET)	- $($(sec
 	@echo "  be-update   - get latest GOPKG_KEYS dependencies"
 
 	@echo
-	@echo "Notes:"
-	@echo "  GOPKG_KEYS are go packages managed by this Makefile and the following"
-	@echo "  are the included packages:" \
-		$(if ${GOPKG_KEYS},$(foreach key,${GOPKG_KEYS},; echo "    $(key): $($(key)_GO_PACKAGE) ($($(key)_LOCAL_PATH))"))
-
-	@echo $(foreach key,${GOLANG_MAKEFILE_KEYS},$(shell \
-	echo ";echo \"Golang.$(shell perl -e 'print lc("$(key)");').mk: $(GOLANG_$(key)_MK_VERSION)\"" \
+	@echo "build system details:"
+	@echo
+	@printf "  %-15s %-40s %s\n" GOPKG_KEYS GO_PACKAGE LOCAL_PATH
+	@printf "  %-15s %-40s %s\n" ---------- ---------- ----------
+	@$(foreach key,${GOPKG_KEYS},$(shell \
+		echo "printf \"  %-15s %-40s %s\\n\" \"$(key)\" \"$($(key)_GO_PACKAGE)\" \"$($(key)_LOCAL_PATH)\";" \
+))
+	@echo
+	@printf "  %-20s %-10s %s\n" MAKEFILE VERSION DESCRIPTION
+	@printf "  %-20s %-10s %s\n" -------- ------- -----------
+	@$(foreach key,${MAKEFILE_KEYS},$(shell \
+		echo "printf \"  %-20s %-10s %-10s\\n\" \"$($(key)_MK_FILE)\" \"$($(key)_MK_VERSION)\" \"$($(key)_MK_DESCRIPTION)\";" \
 ))
 
 clean:
@@ -109,6 +126,8 @@ realclean: distclean
 debug: BUILD_VERSION=$(call __tag_ver)
 debug: BUILD_RELEASE=$(call __rel_ver)
 debug: TRIM_PATHS=$(call __go_trim_path)
+debug: BUILD_TAGS += ${DEBUG_BUILD_TAGS}
+debug: _BUILD_TAGS = $(call __build_tags)
 debug: __golang
 	@$(call __go_build_debug,"${BUILD_NAME}",${BUILD_OS},${BUILD_ARCH},${SRC_CMD_PATH})
 	@${SHASUM_CMD} "${BUILD_NAME}"
@@ -151,6 +170,9 @@ install:
 	@if [ -f "${BUILD_NAME}" ]; then \
 		echo "# ${BUILD_NAME} present"; \
 		$(call __install_exe,"${BUILD_NAME}","${INSTALL_BIN_PATH}/${BIN_NAME}"); \
+	elif [ -f "${BIN_NAME}.${BUILD_OS}.${BUILD_ARCH}" ]; then \
+		echo "# ${BIN_NAME}.${BUILD_OS}.${BUILD_ARCH} present"; \
+		$(call __install_exe,"${BIN_NAME}.${BUILD_OS}.${BUILD_ARCH}","${INSTALL_BIN_PATH}/${BIN_NAME}"); \
 	else \
 		echo "error: missing ${BUILD_NAME} binary" 1>&2; \
 		false; \
@@ -174,14 +196,18 @@ install-amd64:
 		false; \
 	fi
 
-install-autocomplete: AUTOCOMPLETE_FILE=${INSTALL_AUTOCOMPLETE_PATH}/${BIN_NAME}
 install-autocomplete:
 	@if [ ! -f "${SRC_AUTOCOMPLETE_FILE}" ]; then \
 		echo "error: SRC_AUTOCOMPLETE_FILE=${SRC_AUTOCOMPLETE_FILE} not found"; \
 		false; \
+	elif [ -z "${AUTOCOMPLETE_FILES}" ]; then \
+		echo "error: no AUTOCOMPLETE_FILES to install"; \
+		false; \
 	fi
-	@echo "# installing ${BIN_NAME} bash_autocomplete to: ${AUTOCOMPLETE_FILE}"
-	@$(call __install_exe,${SRC_AUTOCOMPLETE_FILE},${AUTOCOMPLETE_FILE})
+	@for DST in ${AUTOCOMPLETE_FILES}; do \
+		echo "# installing ${SRC_AUTOCOMPLETE_FILE} to: $${DST}"; \
+		$(call __install_exe,${SRC_AUTOCOMPLETE_FILE},$${DST}); \
+	done
 
 deps: __deps
 

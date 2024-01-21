@@ -48,6 +48,4 @@ BUILD_RELEASE_VAR := main.BuildRelease
 
 SRC_CMD_PATH := ./cmd/eheditor
 
-include Golang.cmd.mk
-include Golang.def.mk
-include Golang.cdk.mk
+include Golang.mk
