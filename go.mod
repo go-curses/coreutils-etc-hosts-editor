@@ -1,10 +1,9 @@
 module github.com/go-curses/coreutils-etc-hosts-editor
 
-go 1.21
-
-toolchain go1.21.0
+go 1.21.5
 
 require (
+	github.com/go-corelibs/maps v1.1.0
 	github.com/go-curses/cdk v0.5.22
 	github.com/go-curses/ctk v0.5.13
 	github.com/maruel/natural v1.1.1
@@ -18,6 +17,7 @@ require (
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
+	github.com/go-corelibs/maths v1.0.1 // indirect
 	github.com/go-curses/term v1.2.2-gocurses.1 // indirect
 	github.com/go-curses/terminfo v1.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
