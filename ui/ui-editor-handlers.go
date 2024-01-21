@@ -17,9 +17,10 @@ package ui
 import (
 	cenums "github.com/go-curses/cdk/lib/enums"
 	"github.com/go-curses/cdk/log"
-	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 	"github.com/go-curses/ctk"
 	"github.com/go-curses/ctk/lib/enums"
+
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
 const gSidebarAddRowHandler = "editor-add-row-handler"

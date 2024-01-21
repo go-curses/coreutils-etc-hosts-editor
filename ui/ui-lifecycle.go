@@ -23,7 +23,7 @@ import (
 	"github.com/go-curses/cdk/log"
 	"github.com/go-curses/ctk"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor"
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
 func (c *CUI) startup(_ []interface{}, argv ...interface{}) enums.EventFlag {

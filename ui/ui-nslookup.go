@@ -22,7 +22,7 @@ import (
 	"github.com/go-curses/ctk"
 	"github.com/go-curses/ctk/lib/enums"
 
-	"github.com/go-curses/coreutils-etc-hosts-editor"
+	editor "github.com/go-curses/coreutils-etc-hosts-editor"
 )
 
 func (c *CUI) newNsLookupDialog(host *editor.Host) (err error) {

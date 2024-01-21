@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/go-corelibs/maps"
+
 	"github.com/go-curses/cdk"
 	cenums "github.com/go-curses/cdk/lib/enums"
 	"github.com/go-curses/cdk/lib/paint"
