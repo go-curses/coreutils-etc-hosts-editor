@@ -50,14 +50,9 @@ type CEheditor struct {
 	ActionHBox   ctk.HButtonBox
 	Display      cdk.Display
 	Window       ctk.Window
-	EditorButton ctk.Button
-	ViewerButton ctk.Button
 	SaveButton   ctk.Button
 	ReloadButton ctk.Button
 	QuitButton   ctk.Button
-
-	HostsViewport ctk.ScrolledViewport
-	HostsVBox     ctk.VBox
 
 	EditingHBox ctk.HBox
 
@@ -93,8 +88,6 @@ type CEheditor struct {
 	EditorCommentList   []*editor.Host
 	EditorAddressLookup map[string]*editor.Host
 	EditorDomainsLookup map[string]*editor.Host
-
-	ViewerDomainLookup map[string]*editor.Host
 
 	sync.RWMutex
 }

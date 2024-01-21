@@ -26,12 +26,10 @@ import (
 )
 
 func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
-	e.HostsVBox.Freeze()
 	e.EditingHBox.Freeze()
 
 	var found []net.IP
 	if found, err = host.PerformLookup(); err != nil {
-		e.HostsVBox.Thaw()
 		e.EditingHBox.Thaw()
 		return err
 	}
@@ -39,7 +37,6 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 	numFound := len(found)
 	if numFound == 0 {
 		ctk.NewMessageDialog("nslookup", fmt.Sprintf("No hosts found for domain:\n%v", host.Lookup()))
-		e.HostsVBox.Thaw()
 		e.EditingHBox.Thaw()
 		return fmt.Errorf("domain hosts not found")
 	}
@@ -58,7 +55,6 @@ func (e *CEheditor) newNsLookupDialog(host *editor.Host) (err error) {
 	)
 	dialog.SetSizeRequest(42, 10)
 	dialog.RunFunc(func(response enums.ResponseType, argv ...interface{}) {
-		e.HostsVBox.Thaw()
 		e.EditingHBox.Thaw()
 		if len(argv) >= 2 {
 			h, _ := argv[0].(*editor.Host)

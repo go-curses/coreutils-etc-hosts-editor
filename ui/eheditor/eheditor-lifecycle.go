@@ -17,7 +17,6 @@ package eheditor
 import (
 	"fmt"
 
-	"github.com/go-curses/cdk"
 	"github.com/go-curses/cdk/lib/enums"
 	"github.com/go-curses/cdk/lib/paths"
 	"github.com/go-curses/cdk/lib/ptypes"
@@ -95,20 +94,14 @@ func (e *CEheditor) startup(data []interface{}, argv ...interface{}) enums.Event
 		vbox.PackStart(e.ContentsHBox, true, true, 0)
 
 		e.ContentsHBox.PackStart(e.makeEditor(), true, true, 0)
-		e.ContentsHBox.PackStart(e.makeViewer(), true, true, 0)
 
 		vbox.PackEnd(e.makeActionButtonBox(), false, true, 0)
 
 		e.switchToEditor()
+
 		e.App.NotifyStartupComplete()
 		e.Window.Show()
-		e.HostsViewport.GrabFocus()
-		e.Display.Connect(cdk.SignalEventResize, "display-resize-handler", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-			if e.App.StartupCompleted() {
-				e.updateViewer()
-			}
-			return enums.EVENT_PASS
-		})
+
 		return enums.EVENT_PASS
 	}
 	return enums.EVENT_STOP

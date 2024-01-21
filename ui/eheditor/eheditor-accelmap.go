@@ -48,28 +48,6 @@ func (e *CEheditor) makeAccelmap() (ag ctk.AccelGroup) {
 			return
 		},
 	)
-	ag.ConnectByPath(
-		"<eheditor-window>/Window/Editor",
-		"editor-window-accel",
-		func(argv ...interface{}) (handled bool) {
-			ag.LogDebug("editor-window-accel called")
-			if e.App.GetContext().Bool("with-old-version") {
-				e.switchToEditor()
-			}
-			return
-		},
-	)
-	ag.ConnectByPath(
-		"<eheditor-window>/Window/Viewer",
-		"viewer-window-accel",
-		func(argv ...interface{}) (handled bool) {
-			ag.LogDebug("viewer-window-accel called")
-			if e.App.GetContext().Bool("with-old-version") {
-				e.switchToViewer()
-			}
-			return
-		},
-	)
 	return
 }
 
@@ -77,28 +55,6 @@ func (e *CEheditor) makeActionButtonBox() ctk.HButtonBox {
 	e.ActionHBox = ctk.NewHButtonBox(false, 1)
 	e.ActionHBox.Show()
 	e.ActionHBox.SetSizeRequest(-1, 1)
-
-	e.EditorButton = ctk.NewButtonWithMnemonic("_Editor <F7>")
-	e.EditorButton.SetSizeRequest(-1, 1)
-	e.EditorButton.Connect(ctk.SignalActivate, "switch-to-editor", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-		e.switchToEditor()
-		return enums.EVENT_STOP
-	})
-	e.ActionHBox.PackStart(e.EditorButton, false, false, 0)
-
-	e.ViewerButton = ctk.NewButtonWithMnemonic("_Viewer <F8>")
-	e.ViewerButton.SetSizeRequest(-1, 1)
-	e.ViewerButton.Connect(ctk.SignalActivate, "switch-to-viewer", func(data []interface{}, argv ...interface{}) enums.EventFlag {
-		e.switchToViewer()
-		return enums.EVENT_STOP
-	})
-	e.ActionHBox.PackStart(e.ViewerButton, false, false, 0)
-
-	ctx := e.App.GetContext()
-	if ctx.Bool("with-old-version") {
-		e.EditorButton.Show()
-		e.ViewerButton.Show()
-	}
 
 	actionSep := ctk.NewSeparator()
 	actionSep.Show()

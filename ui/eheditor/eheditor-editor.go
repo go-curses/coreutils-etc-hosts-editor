@@ -48,10 +48,6 @@ func (e *CEheditor) switchToEditor() {
 	}
 	e.Window.Thaw()
 	e.ContentsHBox.Thaw()
-	e.EditorButton.SetTheme(ActiveButtonTheme)
-	e.EditorButton.GrabFocus()
-	e.ViewerButton.SetTheme(DefaultButtonTheme)
-	e.ContentsHBox.Thaw()
 	e.focusEditor(e.SelectedHost)
 }
 
