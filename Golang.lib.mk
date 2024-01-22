@@ -16,7 +16,7 @@
 
 MAKEFILE_KEYS += GOLANG_LIB
 GOLANG_LIB_MK_FILE := Golang.lib.mk
-GOLANG_LIB_MK_VERSION := v0.2.0
+GOLANG_LIB_MK_VERSION := v0.2.1
 GOLANG_LIB_MK_DESCRIPTION := go-corelibs support
 
 #
@@ -49,6 +49,10 @@ ifeq (${AUTO_CORELIBS},true)
 
 ifeq (chdirs,$(shell echo "${FOUND_CORELIBS}" | grep '^chdirs$$'))
 GOPKG_KEYS += CL_CHDIRS
+endif
+
+ifeq (cli,$(shell echo "${FOUND_CORELIBS}" | grep '^cli$$'))
+GOPKG_KEYS += CL_CLI
 endif
 
 ifeq (convert,$(shell echo "${FOUND_CORELIBS}" | grep '^convert$$'))
@@ -132,6 +136,9 @@ endif
 
 CL_CHDIRS_GO_PACKAGE ?= ${CORELIBS_BASE}/chdirs
 CL_CHDIRS_LOCAL_PATH ?= ${CORELIBS_PATH}/chdirs
+
+CL_CLI_GO_PACKAGE ?= ${CORELIBS_BASE}/cli
+CL_CLI_LOCAL_PATH ?= ${CORELIBS_PATH}/cli
 
 CL_CONVERT_GO_PACKAGE ?= ${CORELIBS_BASE}/convert
 CL_CONVERT_LOCAL_PATH ?= ${CORELIBS_PATH}/convert
