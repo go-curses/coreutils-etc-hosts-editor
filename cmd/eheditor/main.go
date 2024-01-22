@@ -19,7 +19,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/go-curses/cdk"
+	clcli "github.com/go-corelibs/cli"
 	"github.com/go-curses/cdk/log"
 
 	"github.com/go-curses/coreutils-etc-hosts-editor/ui"
@@ -31,7 +31,9 @@ var (
 )
 
 func init() {
-	cdk.AppCliTtyFlag.Category = ""
+	cli.FlagStringer = clcli.NewFlagStringer().
+		PruneDefaultBools(true).
+		Make()
 }
 
 func main() {
@@ -59,6 +61,7 @@ func main() {
 		Usage:   "display the version",
 		Aliases: []string{"v"},
 	}
+	clcli.ClearEmptyCategories(appCLI.Flags)
 	if err := ehe.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
