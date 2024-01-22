@@ -1,3 +1,17 @@
+eheditor (0.7.1) unstable; urgency=medium
+
+  * tagged v0.7.1 release build - 91c612733d8dd0fa485fb353533614d267e81a6a
+  * upstream changes:
+   * 91c6127 Makefile,cmd: setting versions to v0.7.1
+   * aa8cda6 Makefile: remove commented-out export statement
+   * 81241fa go.mod: be-update; tidy
+   * 9528c1a Makefile: add enable AUTO_CORELIBS
+   * 07b4705 Golang.lib.mk: updated to v0.2.1
+   * 3ab1619 cmd: use go-corelibs/cli.FlagStringer; use go-corelibs/cli.ClearEmptyCategories; remove cdk tty flag category setting
+   * da18c1a ui: renamed eheditor.go to ui.go
+
+ -- The Go-Curses Team <go.enjin.org+curses@gmail.com>  Mon, 22 Jan 2024 10:47:35 -0500
+
 eheditor (0.7.0) unstable; urgency=medium
 
   * tagged v0.7.0 release build - b2c68463eff2d4ff7c8085a9309cfdb5521ff631
