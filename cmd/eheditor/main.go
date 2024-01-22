@@ -26,7 +26,7 @@ import (
 )
 
 var (
-	BuildVersion = "0.7.0"
+	BuildVersion = "0.7.1"
 	BuildRelease = "trunk"
 )
 
