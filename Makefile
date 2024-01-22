@@ -18,7 +18,6 @@
 #CMD=echo
 
 -include .env
-#export
 
 BIN_NAME := eheditor
 UNTAGGED_VERSION := v0.7.0
