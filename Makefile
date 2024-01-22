@@ -33,6 +33,8 @@ BE_LOCAL_PATH := nil
 
 GOPKG_KEYS ?= CDK CTK
 
+AUTO_CORELIBS := true
+
 CDK_GO_PACKAGE ?= github.com/go-curses/cdk
 CDK_LOCAL_PATH ?= ../cdk
 
