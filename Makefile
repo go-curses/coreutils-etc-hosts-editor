@@ -18,11 +18,10 @@
 #CMD=echo
 
 -include .env
-#export
 
 BIN_NAME := eheditor
-UNTAGGED_VERSION := v0.7.0
-UNTAGGED_COMMIT := b2c68463ef
+UNTAGGED_VERSION := v0.7.1
+UNTAGGED_COMMIT := trunk
 
 SHELL := /bin/bash
 RUN_ARGS ?= ./example.etc-hosts
@@ -32,6 +31,8 @@ GO_ENJIN_PKG := nil
 BE_LOCAL_PATH := nil
 
 GOPKG_KEYS ?= CDK CTK
+
+AUTO_CORELIBS := true
 
 CDK_GO_PACKAGE ?= github.com/go-curses/cdk
 CDK_LOCAL_PATH ?= ../cdk
@@ -50,6 +51,6 @@ SRC_CMD_PATH := ./cmd/eheditor
 
 #: begin debian packaging branch changes
 PACKAGING_NAME := eheditor
-include Debian.mk
+-include Debian.mk
 #: end debian packaging branch changes
 include Golang.mk

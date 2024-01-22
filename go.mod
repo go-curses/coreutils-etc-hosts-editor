@@ -3,10 +3,10 @@ module github.com/go-curses/coreutils-etc-hosts-editor
 go 1.21.5
 
 require (
+	github.com/go-corelibs/cli v0.2.0
 	github.com/go-corelibs/maps v1.1.0
 	github.com/go-curses/cdk v0.5.22
 	github.com/go-curses/ctk v0.5.13
-	github.com/maruel/natural v1.1.1
 	github.com/urfave/cli/v2 v2.27.1
 )
 
@@ -18,6 +18,7 @@ require (
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/go-corelibs/maths v1.0.1 // indirect
+	github.com/go-corelibs/slices v1.3.0 // indirect
 	github.com/go-curses/term v1.2.2-gocurses.1 // indirect
 	github.com/go-curses/terminfo v1.1.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
@@ -27,6 +28,7 @@ require (
 	github.com/jackdoe/go-gpmctl v0.0.0-20231210204613-737e8a242925 // indirect
 	github.com/jtolio/gls v4.20.0+incompatible // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
+	github.com/maruel/natural v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
@@ -40,7 +42,7 @@ require (
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
+	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
